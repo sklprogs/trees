@@ -1,61 +1,90 @@
-#!/usr/bin/python3
-# -*- coding: UTF-8 -*-
-
+import sys
+import PyQt5
 import PyQt5.QtWidgets
 
-from skl_shared_qt.localize import _
-import skl_shared_qt.shared as sh
 
-
-class TableModel(PyQt5.QtCore.QAbstractTableModel):
+class Model:
     
-    def __init__(self,datain,*args):
-        PyQt5.QtCore.QAbstractTableModel.__init__(self,*args)
-        self.arraydata = datain
+    def __init__(self):
+        self.model = PyQt5.QtGui.QStandardItemModel()
+        self.Success = True
     
-    def rowCount(self,parent):
-        return len(self.arraydata)
+    def fill(self,dic):
+        f = 'Model.fill'
+        if not dic:
+            self.Success = False
+            print(f'{f}:Empty')
+            return
+        self.dic = dic
+        self.parse_json()
+        self.set_headers()
+    
+    def _set_item(self,parent,section):
+        if isinstance(section,dict):
+            for key, value in section.items():
+                item = PyQt5.QtGui.QStandardItem(str(key))
+                if isinstance(value,dict):
+                    parent.appendRow(item)
+                    self._set_item(item,value)
+                else:
+                    item2 = PyQt5.QtGui.QStandardItem(str(value))
+                    parent.appendRow([item,item2])
+    
+    def parse_json(self):
+        f = 'Model.parse_json'
+        if not self.Success:
+            print(f'{f}:Cancel')
+            return
+        parent = self.model.invisibleRootItem()
+        self._set_item(parent,self.dic)
+    
+    def set_headers(self):
+        f = 'Model.set_headers'
+        if not self.Success:
+            print(f'{f}:Cancel')
+            return
+        self.model.setHorizontalHeaderLabels(['Level','Values'])
 
-    def columnCount(self,parent):
-        return 1
-
-    def data(self,index,role):
-        f = '[MClientQt] subjects.priorities.gui.TableModel.data'
-        if not index.isValid():
-            return PyQt5.QtCore.QVariant()
-        if role == PyQt5.QtCore.Qt.DisplayRole:
-            try:
-                return PyQt5.QtCore.QVariant(self.arraydata[index.row()])
-            except Exception as e:
-                mes = _('List out of bounds at row #{}, column #{}!')
-                mes = mes.format(index.row(),index.column())
-                sh.objs.get_mes(f,mes,True).show_warning()
-                return PyQt5.QtCore.QVariant()
 
 
-
-class App(PyQt5.QtWidgets.QWidget):
+class Widget(PyQt5.QtWidgets.QWidget):
     
     def __init__(self,*args,**kwargs):
         super().__init__(*args,**kwargs)
-        self.set_gui()
-    
-    def set_gui(self):
-        self.layout_ = PyQt5.QtWidgets.QHBoxLayout()
         self.tree = PyQt5.QtWidgets.QTreeView()
-        self.layout_.addWidget(self.tree)
-        self.setLayout(self.layout_)
-    
+        layout_ = PyQt5.QtWidgets.QHBoxLayout()
+        layout_.addWidget(self.tree)
+        self.setLayout(layout_)
+
     def set_model(self,model):
         self.tree.setModel(model)
 
 
 if __name__ == '__main__':
-    f = '__main__'
-    sh.com.start()
-    table = ['hello','bye']
-    model = TableModel(table)
-    app = App()
-    app.set_model(model)
-    app.show()
-    sh.com.end()
+    dic = {'Level1': {'Level1_item1':14
+                     ,'Level1_item2':12
+                     ,'Level1_item3':3.55
+                     }
+          ,'Level2': {'Level2_SubLevel1':
+                         {'Level2_SubLevel1_item1':3.52
+                         ,'Level2_SubLevel1_item2':2.55
+                         ,'Level2_SubLevel1_item3':13
+                         }
+                     ,'Level2_SubLevel2':
+                         {'Level2_SubLevel2_item1':2
+                         ,'Level2_SubLevel2_item2':4
+                         ,'Level2_SubLevel2_item3':3.11
+                         }
+                     }
+          ,'Level3': {'Level3_item1':12
+                     ,'Level3_item2':13.55
+                     ,'Level3_item3':122
+                     }
+          }
+    app = PyQt5.QtWidgets.QApplication(sys.argv)
+    imodel = Model()
+    imodel.fill(dic)
+    main = Widget()
+    main.set_model(imodel.model)
+    main.show()
+    sys.exit(app.exec_())
