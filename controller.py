@@ -19,31 +19,28 @@ class Model:
         self.parse_json()
         self.set_headers()
     
-    def _set_item(self,parent,section):
-        if isinstance(section,dict):
-            for key, value in section.items():
-                item = PyQt5.QtGui.QStandardItem(str(key))
-                if isinstance(value,dict):
-                    parent.appendRow(item)
-                    self._set_item(item,value)
-                else:
-                    item2 = PyQt5.QtGui.QStandardItem(str(value))
-                    parent.appendRow([item,item2])
+    def _set_item(self,key):
+        item = PyQt5.QtGui.QStandardItem(str(key))
+        self.root.appendRow(item)
+        for value in self.dic[key]:
+            child = PyQt5.QtGui.QStandardItem(str(value))
+            item.appendRow(child)
     
     def parse_json(self):
         f = 'Model.parse_json'
         if not self.Success:
             print(f'{f}:Cancel')
             return
-        parent = self.model.invisibleRootItem()
-        self._set_item(parent,self.dic)
+        self.root = self.model.invisibleRootItem()
+        for key in self.dic:
+            self._set_item(key)
     
     def set_headers(self):
         f = 'Model.set_headers'
         if not self.Success:
             print(f'{f}:Cancel')
             return
-        self.model.setHorizontalHeaderLabels(['Level','Values'])
+        self.model.setHorizontalHeaderLabels(['Level'])
 
 
 
@@ -61,25 +58,11 @@ class Widget(PyQt5.QtWidgets.QWidget):
 
 
 if __name__ == '__main__':
-    dic = {'Level1': {'Level1_item1':14
-                     ,'Level1_item2':12
-                     ,'Level1_item3':3.55
-                     }
-          ,'Level2': {'Level2_SubLevel1':
-                         {'Level2_SubLevel1_item1':3.52
-                         ,'Level2_SubLevel1_item2':2.55
-                         ,'Level2_SubLevel1_item3':13
-                         }
-                     ,'Level2_SubLevel2':
-                         {'Level2_SubLevel2_item1':2
-                         ,'Level2_SubLevel2_item2':4
-                         ,'Level2_SubLevel2_item3':3.11
-                         }
-                     }
-          ,'Level3': {'Level3_item1':12
-                     ,'Level3_item2':13.55
-                     ,'Level3_item3':122
-                     }
+    dic = {'Level1': ['Level1_item1','Level1_item2','Level1_item3']
+          ,'Level2': ['Level2_item1','Level2_item2','Level2_item3'
+                     ,'Level2_item4'
+                     ]
+          ,'Level3': ['Level3_item1','Level3_item2','Level3_item3']
           }
     app = PyQt5.QtWidgets.QApplication(sys.argv)
     imodel = Model()
