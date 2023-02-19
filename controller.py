@@ -52,9 +52,28 @@ class Widget(PyQt5.QtWidgets.QWidget):
         layout_ = PyQt5.QtWidgets.QHBoxLayout()
         layout_.addWidget(self.tree)
         self.setLayout(layout_)
+        self.set_bindings()
 
+    def bind(self,hotkey,action):
+        PyQt5.QtWidgets.QShortcut(PyQt5.QtGui.QKeySequence(hotkey),self).activated.connect(action)
+    
+    def set_bindings(self):
+        self.bind('Space',self.test)
+        self.bind('Escape',self.close)
+    
+    def test(self):
+        print(self.get_index())
+        print(self.get_row())
+    
     def set_model(self,model):
         self.tree.setModel(model)
+    
+    def get_index(self):
+        return self.tree.selectionModel().currentIndex()
+    
+    def get_row(self):
+        index_ = self.get_index()
+        return(index_.row(),index_.column())
 
 
 if __name__ == '__main__':
