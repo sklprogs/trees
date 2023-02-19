@@ -2,78 +2,36 @@ import sys
 import PyQt5
 import PyQt5.QtWidgets
 
+import gui as gi
 
-class Model:
+
+
+class Tree:
     
     def __init__(self):
-        self.model = PyQt5.QtGui.QStandardItemModel()
-        self.Success = True
+        self.gui = gi.Tree()
+        self.set_bindings()
+    
+    def close(self):
+        self.gui.close()
+    
+    def show(self):
+        self.gui.show()
     
     def fill(self,dic):
-        f = 'Model.fill'
+        f = '[Trees] controller.Tree.fill'
         if not dic:
-            self.Success = False
-            print(f'{f}:Empty')
+            print(f,'Empty!')
             return
-        self.dic = dic
-        self.parse_json()
-        self.set_headers()
-    
-    def _set_item(self,key):
-        item = PyQt5.QtGui.QStandardItem(str(key))
-        self.root.appendRow(item)
-        for value in self.dic[key]:
-            child = PyQt5.QtGui.QStandardItem(str(value))
-            item.appendRow(child)
-    
-    def parse_json(self):
-        f = 'Model.parse_json'
-        if not self.Success:
-            print(f'{f}:Cancel')
-            return
-        self.root = self.model.invisibleRootItem()
-        for key in self.dic:
-            self._set_item(key)
-    
-    def set_headers(self):
-        f = 'Model.set_headers'
-        if not self.Success:
-            print(f'{f}:Cancel')
-            return
-        self.model.setHorizontalHeaderLabels(['Level'])
-
-
-
-class Widget(PyQt5.QtWidgets.QWidget):
-    
-    def __init__(self,*args,**kwargs):
-        super().__init__(*args,**kwargs)
-        self.tree = PyQt5.QtWidgets.QTreeView()
-        layout_ = PyQt5.QtWidgets.QHBoxLayout()
-        layout_.addWidget(self.tree)
-        self.setLayout(layout_)
-        self.set_bindings()
-
-    def bind(self,hotkey,action):
-        PyQt5.QtWidgets.QShortcut(PyQt5.QtGui.QKeySequence(hotkey),self).activated.connect(action)
+        self.gui.fill(dic)
     
     def set_bindings(self):
-        self.bind('Space',self.test)
-        self.bind('Escape',self.close)
+        self.gui.bind('Space',self.test)
+        self.gui.bind('Escape',self.close)
     
     def test(self):
-        print(self.get_index())
-        print(self.get_row())
-    
-    def set_model(self,model):
-        self.tree.setModel(model)
-    
-    def get_index(self):
-        return self.tree.selectionModel().currentIndex()
-    
-    def get_row(self):
-        index_ = self.get_index()
-        return(index_.row(),index_.column())
+        print(self.gui.get_index())
+        print(self.gui.get_row())
 
 
 if __name__ == '__main__':
@@ -84,9 +42,7 @@ if __name__ == '__main__':
           ,'Level3': ['Level3_item1','Level3_item2','Level3_item3']
           }
     app = PyQt5.QtWidgets.QApplication(sys.argv)
-    imodel = Model()
-    imodel.fill(dic)
-    main = Widget()
-    main.set_model(imodel.model)
-    main.show()
+    itree = Tree()
+    itree.fill(dic)
+    itree.show()
     sys.exit(app.exec_())
