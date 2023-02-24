@@ -15,7 +15,39 @@ class Tree:
         self.set_bindings()
     
     def test(self):
-        pass
+        self.move_up()
+        self.set_majors()
+        self.set_minors()
+    
+    def move_item_up(self):
+        cur_index = self.gui.get_cur_index()
+        if not cur_index:
+            print('empty!')
+            return
+        cur = self.gui.get_item(cur_index)
+        if not cur:
+            print('empty!')
+            return
+        rowno = self.gui.get_row(cur_index)
+        prev_index = self.gui.get_index(rowno-1)
+        if not prev_index:
+            print('empty!')
+            return
+        prev = self.gui.get_item(prev_index)
+        if not prev:
+            print('empty!')
+            return
+        cur_text = self.gui.get_text(cur)
+        prev_text = self.gui.get_text(prev)
+        self.gui.set_text(cur,prev_text)
+        self.gui.set_text(prev,cur_text)
+    
+    def move_up(self):
+        rowno = self.gui.get_cur_row()
+        if rowno == 0:
+            print('Create new group first')
+        else:
+            self.move_item_up()
     
     def close(self):
         self.gui.close()
@@ -78,6 +110,6 @@ if __name__ == '__main__':
     itree.fill(dic)
     itree.gui.tree.expandAll()
     itree.show()
-    itree.set_majors()
-    itree.set_minors()
+    #itree.set_majors()
+    #itree.set_minors()
     sys.exit(app.exec_())

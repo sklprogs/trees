@@ -50,6 +50,15 @@ class Tree(PyQt5.QtWidgets.QWidget):
         self.setLayout(layout_)
         self.set_model()
 
+    def set_text(self,item,text):
+        item.setText(text)
+    
+    def get_parent(self,item):
+        return item.parent()
+    
+    def insert_item(self,rowno,parent,item):
+        parent.insertRow(rowno,item)
+    
     def fill(self,dic):
         self.model.fill(dic)
     
@@ -72,8 +81,20 @@ class Tree(PyQt5.QtWidgets.QWidget):
     def get_root(self):
         return self.model.model.invisibleRootItem()
     
-    def get_index(self):
+    def get_row(self,index_):
+        return index_.row()
+    
+    def get_cur_row(self):
+        return self.get_cur_index().row()
+    
+    def get_cur_index(self):
         return self.tree.selectionModel().currentIndex()
+    
+    def get_index(self,rowno):
+        return self.model.model.index(rowno,0)
+    
+    def get_item(self,index_):
+        return self.model.model.itemFromIndex(index_)
 
 
 if __name__ == '__main__':
