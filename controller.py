@@ -30,8 +30,13 @@ class Tree:
         self.gui.bind('Escape',self.close)
     
     def test(self):
-        print(self.gui.get_index())
-        print(self.gui.get_row())
+        print('------------------------------')
+        index_ = self.gui.get_index()
+        print(f'Row #{index_.row()}. Column #{index_.column()}')
+        item = self.gui.model.model.itemFromIndex(index_)
+        self.gui.inspect_item(item)
+        #self.gui.get_children(item)
+        #self.gui.get_row()
 
 
 if __name__ == '__main__':
@@ -44,5 +49,7 @@ if __name__ == '__main__':
     app = PyQt5.QtWidgets.QApplication(sys.argv)
     itree = Tree()
     itree.fill(dic)
+    itree.gui.tree.expandAll()
     itree.show()
+    #itree.gui.print_index()
     sys.exit(app.exec_())

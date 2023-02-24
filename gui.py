@@ -53,9 +53,65 @@ class Tree(PyQt5.QtWidgets.QWidget):
     def get_index(self):
         return self.tree.selectionModel().currentIndex()
     
+    def _print(self,rowno,colno):
+        index_ = self.model.model.index(rowno,colno)
+        item = self.model.model.itemFromIndex(index_)
+        if item is None:
+            print(f'No item for ({rowno},{colno})!')
+        else:
+            print(f'({rowno},{colno}):',item.text())
+    
+    def print_index(self):
+        self._print(0,0)
+        self._print(0,1)
+        self._print(1,0)
+        self._print(2,0)
+        self._print(3,0)
+    
+    def inspect_item(self,item):
+        if item is None:
+            print('Empty item!')
+            return
+        print('text:',item.text())
+        parent = item.parent()
+        if parent is None:
+            print('This is root item')
+            return
+        print('parent text:',parent.text())
+    
+    def get_children(self,item):
+        #item.childCount()
+        if item is None:
+            print('Empty item!')
+            return
+        child = item.child(0,0)
+        if child is None:
+            print('Empty child!')
+            return
+        print(f'({item.text()}): child at (0,0):',child.text())
+    
     def get_row(self):
+        pass
+        '''
         index_ = self.get_index()
-        return(index_.row(),index_.column())
+        print('index:',index_)
+        item = self.model.model.itemFromIndex(index_)
+        print('item.index:',item.index())
+        print('text:',item.text())
+        print('row:',index_.row(),'column:',index_.column())
+        parent = item.parent()
+        print('parent:',parent)
+        if not parent:
+            return
+        print('parent row:',parent.row())
+        '''
+        #item = self.model.model.invisibleRootItem()
+        #child = item.child()
+        #print('type(child):',type(child))
+        #print('child',child)
+        #print('root row:',item.row())
+        #print('root row:',index_.row(),'root column:',index_.column())
+        #return(index_.row(),index_.column())
 
 
 if __name__ == '__main__':
