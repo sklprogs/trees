@@ -14,6 +14,9 @@ class Tree:
         self.gui = gi.Tree()
         self.set_bindings()
     
+    def test(self):
+        pass
+    
     def close(self):
         self.gui.close()
     
@@ -36,7 +39,7 @@ class Tree:
         if not item:
             print('empty!')
             return children
-        rownum = self.gui.get_num(item)
+        rownum = self.gui.get_row_num(item)
         if not rownum:
             print('empty!')
             return children
@@ -44,7 +47,7 @@ class Tree:
             subitem = self.gui.get_child(item,i,0)
             children.append(self.gui.get_text(subitem))
         return children
-    
+
     def set_majors(self):
         self.majors = self.get_children(self.gui.get_root())
         print('Majors:',self.majors)
@@ -61,15 +64,6 @@ class Tree:
             item = self.gui.get_child(root,i,0)
             self.minors[self.majors[i]] = self.get_children(item)
         print('Minors:',self.minors)
-    
-    def test(self):
-        print('------------------------------')
-        index_ = self.gui.get_index()
-        print(f'Row #{index_.row()}. Column #{index_.column()}')
-        item = self.gui.model.model.itemFromIndex(index_)
-        self.gui.inspect_item(item)
-        #self.gui.get_children(item)
-        #self.gui.get_row()
 
 
 if __name__ == '__main__':
