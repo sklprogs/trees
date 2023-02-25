@@ -40,6 +40,12 @@ class Tree(PyQt5.QtWidgets.QWidget):
         self.setLayout(layout_)
         self.set_model()
 
+    def set_expanded(self,index_,Expand=False):
+        self.tree.setExpanded(index_,Expand)
+    
+    def is_expanded(self,index_):
+        return self.tree.isExpanded(index_)
+    
     def set_text(self,item,text):
         item.setText(text)
     
