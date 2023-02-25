@@ -46,8 +46,10 @@ class Tree(PyQt5.QtWidgets.QWidget):
     def get_parent(self,item):
         return item.parent()
     
-    def insert_item(self,rowno,parent,item):
-        parent.insertRow(rowno,item)
+    def swap_rows(self,rowno1,rowno2):
+        # Only adjacent rows should be swapped, otherwise rows may disappear
+        item_list = self.model.model.takeRow(rowno1)
+        self.model.model.insertRow(rowno2,item_list)
     
     def fill(self,dic):
         self.model.fill(dic)

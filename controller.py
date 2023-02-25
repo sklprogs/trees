@@ -29,12 +29,18 @@ class Tree:
         parent_item = self.gui.get_parent(item1)
         parent_index = self.gui.get_index_by_item(parent_item)
         
+        # Swap root-related adjacent rows (moves their children as well)
+        if parent_item is None:
+            self.gui.swap_rows(rowno1,rowno2)
+            return
+        
         index2 = self.gui.get_index(rowno2,parent_index)
         item2 = self.gui.get_item(index2)
         
         if not item1 or not item2:
             print('item empty!')
             return
+        
         text1 = self.gui.get_text(item1)
         text2 = self.gui.get_text(item2)
         self.gui.set_text(item1,text2)
