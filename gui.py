@@ -30,16 +30,6 @@ class Model:
 
 
 
-class Item:
-    
-    def __init__(self,item):
-        self.item = item
-    
-    def get_text(self):
-        return self.item.text()
-
-
-
 class Tree(PyQt5.QtWidgets.QWidget):
     
     def __init__(self,*args,**kwargs):
@@ -90,11 +80,17 @@ class Tree(PyQt5.QtWidgets.QWidget):
     def get_cur_index(self):
         return self.tree.selectionModel().currentIndex()
     
-    def get_index(self,rowno):
-        return self.model.model.index(rowno,0)
+    def get_index(self,rowno,parent_index):
+        return self.model.model.index(rowno,0,parent_index)
+    
+    def get_index_by_item(self,item):
+        return self.model.model.indexFromItem(item)
     
     def get_item(self,index_):
         return self.model.model.itemFromIndex(index_)
+    
+    def get_item_by_row(self,rowno):
+        return self.model.model.item(rowno)
 
 
 if __name__ == '__main__':
