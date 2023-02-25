@@ -22,18 +22,16 @@ class Tree:
     def move_item_up(self):
         rowno1 = self.gui.get_cur_row()
         rowno2 = rowno1 - 1
-        cur_index = self.gui.get_cur_index()
-        cur_item = self.gui.get_item(cur_index)
-        parent_item = self.gui.get_parent(cur_item)
-        parent_index = self.gui.get_index_by_item(parent_item)
-        index1 = self.gui.get_index(rowno1,parent_index)
-        index2 = self.gui.get_index(rowno2,parent_index)
+        
+        index1 = self.gui.get_cur_index()
         item1 = self.gui.get_item(index1)
+        
+        parent_item = self.gui.get_parent(item1)
+        parent_index = self.gui.get_index_by_item(parent_item)
+        
+        index2 = self.gui.get_index(rowno2,parent_index)
         item2 = self.gui.get_item(index2)
-        '''
-        item1 = self.gui.get_item_by_row(rowno1)
-        item2 = self.gui.get_item_by_row(rowno2)
-        '''
+        
         if not item1 or not item2:
             print('item empty!')
             return
@@ -41,29 +39,6 @@ class Tree:
         text2 = self.gui.get_text(item2)
         self.gui.set_text(item1,text2)
         self.gui.set_text(item2,text1)
-        '''
-        cur_index = self.gui.get_cur_index()
-        if not cur_index:
-            print('cur index empty!')
-            return
-        cur = self.gui.get_item(cur_index)
-        if not cur:
-            print('cur item empty!')
-            return
-        rowno = self.gui.get_row(cur_index)
-        prev_index = self.gui.get_index(rowno-1,cur_index)
-        if not prev_index:
-            print('prev_index empty!')
-            return
-        prev = self.gui.get_item(prev_index)
-        if not prev:
-            print('prev item empty!')
-            return
-        cur_text = self.gui.get_text(cur)
-        prev_text = self.gui.get_text(prev)
-        self.gui.set_text(cur,prev_text)
-        self.gui.set_text(prev,cur_text)
-        '''
     
     def move_up(self):
         rowno = self.gui.get_cur_row()
