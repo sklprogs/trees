@@ -14,14 +14,15 @@ class Tree:
         self.gui = gi.Tree()
         self.set_bindings()
     
-    def test(self):
-        self.move_up()
-        self.set_majors()
-        self.set_minors()
-    
     def move_item_up(self):
+        self.move_item_delta(-1)
+    
+    def move_item_down(self):
+        self.move_item_delta(1)
+    
+    def move_item_delta(self,delta=-1):
         rowno1 = self.gui.get_cur_row()
-        rowno2 = rowno1 - 1
+        rowno2 = rowno1 + delta
         
         index1 = self.gui.get_cur_index()
         item1 = self.gui.get_item(index1)
@@ -52,6 +53,20 @@ class Tree:
             print('Create new group first')
         else:
             self.move_item_up()
+        self.set_majors()
+        self.set_minors()
+    
+    def move_down(self):
+        rowno = self.gui.get_cur_row()
+        index_ = self.gui.get_cur_index()
+        item = self.gui.get_item(index_)
+        rownum = self.gui.get_row_num(item)
+        if rowno == rownum - 1:
+            print('Create new group first')
+        else:
+            self.move_item_down()
+        self.set_majors()
+        self.set_minors()
     
     def close(self):
         self.gui.close()
@@ -67,7 +82,8 @@ class Tree:
         self.gui.fill(dic)
     
     def set_bindings(self):
-        self.gui.bind('Space',self.test)
+        self.gui.bind('Shift+Up',self.move_up)
+        self.gui.bind('Shift+Down',self.move_down)
         self.gui.bind('Escape',self.close)
     
     def get_children(self,item):
