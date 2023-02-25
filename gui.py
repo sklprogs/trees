@@ -40,6 +40,12 @@ class Tree(PyQt5.QtWidgets.QWidget):
         self.setLayout(layout_)
         self.set_model()
 
+    def collapse_all(self):
+        self.tree.collapseAll()
+    
+    def expand_all(self):
+        self.tree.expandAll()
+    
     def set_expanded(self,index_,Expand=False):
         self.tree.setExpanded(index_,Expand)
     
@@ -87,6 +93,9 @@ class Tree(PyQt5.QtWidgets.QWidget):
     
     def get_cur_index(self):
         return self.tree.selectionModel().currentIndex()
+    
+    def get_root_index(self,rowno):
+        return self.model.model.index(rowno,0)
     
     def get_index(self,rowno,parent_index):
         return self.model.model.index(rowno,0,parent_index)

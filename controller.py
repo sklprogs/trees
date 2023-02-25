@@ -14,6 +14,18 @@ class Tree:
         self.gui = gi.Tree()
         self.set_bindings()
     
+    def has_expanded(self):
+        row_num = self.gui.get_row_num(self.gui.get_root())
+        for rowno in range(row_num):
+            if self.gui.is_expanded(self.gui.get_root_index(rowno)):
+                return True
+    
+    def expand_or_collapse_all(self):
+        if self.has_expanded():
+            self.gui.collapse_all()
+        else:
+            self.gui.expand_all()
+    
     def expand_or_collapse(self):
         index_ = self.gui.get_cur_index()
         if index_ is None:
@@ -92,10 +104,11 @@ class Tree:
         self.gui.fill(dic)
     
     def set_bindings(self):
+        self.gui.bind('Escape',self.close)
         self.gui.bind('Shift+Up',self.move_up)
         self.gui.bind('Shift+Down',self.move_down)
         self.gui.bind('Space',self.expand_or_collapse)
-        self.gui.bind('Escape',self.close)
+        self.gui.bind('Ctrl+A',self.expand_or_collapse_all)
     
     def get_children(self,item):
         children = []
