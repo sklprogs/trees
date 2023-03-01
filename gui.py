@@ -40,6 +40,12 @@ class Tree(PyQt5.QtWidgets.QWidget):
         self.setLayout(layout_)
         self.set_model()
 
+    def get_index_above(self,index_):
+        return self.tree.indexAbove(index_)
+    
+    def get_index_below(self,index_):
+        return self.tree.indexBelow(index_)
+    
     def collapse_all(self):
         self.tree.collapseAll()
     
