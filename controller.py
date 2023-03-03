@@ -40,11 +40,30 @@ class Tree:
         self.set_bindings()
     
     def test(self):
-        rowno1 = self.gui.get_cur_row()
-        rowno2 = rowno1 + 2
+        #rowno1 = self.gui.get_cur_row()
+        #rowno2 = rowno1 + 1
         #index1 = self.gui.get_cur_index()
         #index2 = self.gui.get_index_below()
-        self.gui.swap_rows(rowno1,rowno2)
+        index1 = self.gui.get_cur_index()
+        item1 = self.gui.get_item(index1)
+        root1 = self.gui.get_parent(item1)
+        print('root1 type:',type(root1),', root1:',root1)
+        if root1:
+            root1_text = self.gui.get_text(root1)
+            root1_index = self.gui.get_index_by_item(root1)
+            root1_rowno = self.gui.get_row(root1_index)
+            print(f'root1_text: "{root1_text}", root1_rowno: {root1_rowno}')
+        rowno1 = self.gui.get_row(index1)
+        rowno2 = rowno1 + 1
+        text1 = self.gui.get_text(item1)
+        print(f'text1: "{text1}", rowno1: {rowno1}')
+        if root1:
+            print('Mode: minor')
+            self.gui.swap_subrows(item1,rowno1,rowno2)
+        else:
+            print('Mode: major')
+            self.gui.swap_rows(rowno1,rowno2)
+        self.gui.expand_all()
     
     def has_expanded(self):
         row_num = self.gui.get_row_num(self.gui.get_root())
@@ -199,7 +218,8 @@ if __name__ == '__main__':
     itree = Tree()
     itree.fill(dic)
     itree.gui.tree.expandAll()
-    itree.show()
+    #itree.show()
+    itree.gui.showMaximized()
     #itree.set_majors()
     #itree.set_minors()
     sys.exit(app.exec_())
