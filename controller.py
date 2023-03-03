@@ -59,7 +59,7 @@ class Tree:
         print(f'text1: "{text1}", rowno1: {rowno1}')
         if root1:
             print('Mode: minor')
-            self.gui.swap_subrows(item1,rowno1,rowno2)
+            self.gui.swap_subrows(root1,rowno1,rowno2)
         else:
             print('Mode: major')
             self.gui.swap_rows(rowno1,rowno2)
