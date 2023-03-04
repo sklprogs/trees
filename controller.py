@@ -54,28 +54,6 @@ class Tree:
         self.gui = gi.Tree()
         self.set_bindings()
     
-    def test(self):
-        index1 = self.gui.get_cur_index()
-        item1 = self.gui.get_item(index1)
-        root1 = self.gui.get_parent(item1)
-        print('root1 type:',type(root1),', root1:',root1)
-        if root1:
-            root1_text = self.gui.get_text(root1)
-            root1_index = self.gui.get_index_by_item(root1)
-            root1_rowno = self.gui.get_row(root1_index)
-            print(f'root1_text: "{root1_text}", root1_rowno: {root1_rowno}')
-        rowno1 = self.gui.get_row(index1)
-        rowno2 = rowno1 + 1
-        text1 = self.gui.get_text(item1)
-        print(f'text1: "{text1}", rowno1: {rowno1}')
-        if root1:
-            print('Mode: minor')
-            self.gui.insert(root1,rowno1,rowno2)
-        else:
-            print('Mode: major')
-            self.gui.insert(self.gui.get_root(),rowno1,rowno2)
-        self.gui.expand_all()
-    
     def has_expanded(self):
         row_num = self.gui.get_row_num(self.gui.get_root())
         for rowno in range(row_num):
@@ -130,6 +108,7 @@ class Tree:
             self.gui.insert(parent,rowno1,rowno2)
         else:
             self.gui.insert(self.gui.get_root(),rowno1,rowno2)
+        self.gui.set_cur_index(index2)
     
     def move_up(self):
         rowno = self.gui.get_cur_row()
@@ -175,7 +154,6 @@ class Tree:
         self.gui.bind('Shift+Down',self.move_down)
         self.gui.bind('Space',self.expand_or_collapse)
         self.gui.bind('Ctrl+A',self.expand_or_collapse_all)
-        self.gui.bind('Return',self.test)
     
     def get_children(self,item):
         children = []

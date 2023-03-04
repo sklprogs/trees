@@ -97,7 +97,12 @@ class Tree(PyQt5.QtWidgets.QWidget):
     def get_cur_row(self):
         return self.get_cur_index().row()
     
+    def set_cur_index(self,index_):
+        flags = self.tree.selectionModel().ClearAndSelect
+        self.tree.selectionModel().setCurrentIndex(index_,flags)
+    
     def get_cur_index(self):
+        # PyQt5.QtCore.QItemSelectionModel.currentIndex
         return self.tree.selectionModel().currentIndex()
     
     def get_root_index(self,rowno):
