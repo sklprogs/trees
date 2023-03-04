@@ -81,15 +81,58 @@ class Tree:
         if index1 is None:
             print('empty!')
             return
-        index2 = self.gui.get_index_above(index1)
-        self.move_item(index1,index2)
+        ''' Do not use 'QTreeView.indexAbove' since it can return both major or
+            minor.
+        '''
+        rowno1 = self.gui.get_row(index1)
+        if rowno1 == 0:
+            print('lazy!')
+            return
+        rowno2 = rowno1 - 1
+        self._move_item_shared(index1,rowno1,rowno2)
     
     def move_item_down(self):
         index1 = self.gui.get_cur_index()
         if index1 is None:
             print('empty!')
             return
-        index2 = self.gui.get_index_below(index1)
+        ''' Do not use 'QTreeView.indexAbove' since it can return both major or
+            minor.
+        '''
+        rowno1 = self.gui.get_row(index1)
+        item1 = self.gui.get_item(index1)
+        if item1 is None:
+            print('empty!')
+            return
+        parent1 = self.gui.get_parent(item1)
+        if parent1 is None:
+            parent1 = self.gui.get_root()
+        if parent1 is None:
+            print('empty!')
+            return
+        rownum = self.gui.get_row_num(parent1)
+        if rowno1 == rownum - 1:
+            print('lazy!')
+            return
+        rowno2 = rowno1 + 1
+        self._move_item_shared(index1,rowno1,rowno2)
+    
+    def _move_item_shared(self,index1,rowno1,rowno2):
+        item1 = self.gui.get_item(index1)
+        if item1 is None:
+            print('empty!')
+            return
+        parent1 = self.gui.get_parent(item1)
+        if parent1 is None:
+            parent1 = self.gui.get_root()
+        if parent1 is None:
+            print('empty!')
+            return
+        parent_index = self.gui.get_index_by_item(parent1)
+        if parent_index is None:
+            print('empty!')
+            return
+        index2 = self.gui.get_index(rowno2,parent_index)
         self.move_item(index1,index2)
     
     def move_item(self,index1,index2):
@@ -104,9 +147,12 @@ class Tree:
         parent = self.gui.get_parent(item1)
         rowno1 = self.gui.get_row(index1)
         rowno2 = self.gui.get_row(index2)
+        print('rowno1:',rowno1,', rowno2:',rowno2)
         if parent:
+            print('Mode: minor')
             self.gui.insert(parent,rowno1,rowno2)
         else:
+            print('Mode: major')
             self.gui.insert(self.gui.get_root(),rowno1,rowno2)
         self.gui.set_cur_index(index2)
     
