@@ -123,18 +123,13 @@ class Tree:
         if item1 is None or item2 is None:
             print('empty!')
             return
-        parent_item = self.gui.get_parent(item1)
-        parent_index = self.gui.get_index_by_item(parent_item)
-        # Swap root-related adjacent rows (moves their children as well)
-        if parent_item is None:
-            rowno1 = self.gui.get_row(index1)
-            rowno2 = self.gui.get_row(index2)
-            self.gui.swap_rows(rowno1,rowno2)
-            return
-        text1 = self.gui.get_text(item1)
-        text2 = self.gui.get_text(item2)
-        self.gui.set_text(item1,text2)
-        self.gui.set_text(item2,text1)
+        parent = self.gui.get_parent(item1)
+        rowno1 = self.gui.get_row(index1)
+        rowno2 = self.gui.get_row(index2)
+        if parent:
+            self.gui.insert(parent,rowno1,rowno2)
+        else:
+            self.gui.insert(self.gui.get_root(),rowno1,rowno2)
     
     def move_up(self):
         rowno = self.gui.get_cur_row()
