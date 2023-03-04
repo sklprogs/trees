@@ -39,10 +39,6 @@ class Tree(PyQt5.QtWidgets.QWidget):
         layout_.addWidget(self.tree)
         self.setLayout(layout_)
         self.set_model()
-
-    def swap_subrows(self,item,rowno1,rowno2):
-        item_list = item.takeRow(rowno1)
-        item.insertRow(rowno2,item_list)
     
     def get_index_above(self,index_):
         return self.tree.indexAbove(index_)
@@ -68,10 +64,10 @@ class Tree(PyQt5.QtWidgets.QWidget):
     def get_parent(self,item):
         return item.parent()
     
-    def swap_rows(self,rowno1,rowno2):
+    def insert(self,item,rowno1,rowno2):
         #FIX: if the last root item is selected, it will be deleted
-        item_list = self.model.model.takeRow(rowno1)
-        self.model.model.insertRow(rowno2,item_list)
+        item_list = item.takeRow(rowno1)
+        item.insertRow(rowno2,item_list)
     
     def fill(self,dic):
         self.model.fill(dic)

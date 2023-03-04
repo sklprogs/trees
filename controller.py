@@ -8,9 +8,24 @@ import gui as gi
 
 class Tree:
     ''' Drag-and-drop/navigation strategy:
-        (assume that index1 always precedes index2 and group1 precedes group2)
+        We assume that:
+        - major is a root item, it has no parent and is not indented;
+        - minor is a non-root item, it has a non-empty parent and is indented;
+        - group1 is an item/group to be moved;
+        - group2 is a group over which major/minor group1 is dropped;
+        - index1 is the index of the initially selected row;
+        - index2 is the index where group1 is to be dropped;
+        - index2 > index1 if group1 is moved top to bottom and index1 > index2
+          otherwise;
+        - item1 is an item having the index of index1;
+        - item2 is an item having the index of index2.
+        Variants:
         - indices are the same: report that no action is required;
         - both index1 and index2 are root entries:
+        
+        and index2 is the index of the minor/major where group1 was dropped)
+        
+        
           - index1 and index2 have the same parent: this should happen only if
             index1 == index2 but we skip this variant above;
           - parents of index1 and index2 have the same title (note that
@@ -40,10 +55,6 @@ class Tree:
         self.set_bindings()
     
     def test(self):
-        #rowno1 = self.gui.get_cur_row()
-        #rowno2 = rowno1 + 1
-        #index1 = self.gui.get_cur_index()
-        #index2 = self.gui.get_index_below()
         index1 = self.gui.get_cur_index()
         item1 = self.gui.get_item(index1)
         root1 = self.gui.get_parent(item1)
@@ -59,10 +70,10 @@ class Tree:
         print(f'text1: "{text1}", rowno1: {rowno1}')
         if root1:
             print('Mode: minor')
-            self.gui.swap_subrows(root1,rowno1,rowno2)
+            self.gui.insert(root1,rowno1,rowno2)
         else:
             print('Mode: major')
-            self.gui.swap_rows(rowno1,rowno2)
+            self.gui.insert(self.gui.get_root(),rowno1,rowno2)
         self.gui.expand_all()
     
     def has_expanded(self):
