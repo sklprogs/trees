@@ -76,7 +76,7 @@ class Tree:
         else:
             self.gui.set_expanded(index_,True)
     
-    def move_item_up(self):
+    def move_up(self):
         index1 = self.gui.get_cur_index()
         if index1 is None:
             print('empty!')
@@ -89,14 +89,14 @@ class Tree:
             print('lazy!')
             return
         rowno2 = rowno1 - 1
-        self._move_item_shared(index1,rowno1,rowno2)
+        self._move_by_row(index1,rowno1,rowno2)
     
-    def move_item_down(self):
+    def move_down(self):
         index1 = self.gui.get_cur_index()
         if index1 is None:
             print('empty!')
             return
-        ''' Do not use 'QTreeView.indexAbove' since it can return both major or
+        ''' Do not use 'QTreeView.indexBelow' since it can return both major or
             minor.
         '''
         rowno1 = self.gui.get_row(index1)
@@ -115,9 +115,9 @@ class Tree:
             print('lazy!')
             return
         rowno2 = rowno1 + 1
-        self._move_item_shared(index1,rowno1,rowno2)
+        self._move_by_row(index1,rowno1,rowno2)
     
-    def _move_item_shared(self,index1,rowno1,rowno2):
+    def _move_by_row(self,index1,rowno1,rowno2):
         item1 = self.gui.get_item(index1)
         if item1 is None:
             print('empty!')
@@ -155,31 +155,6 @@ class Tree:
             print('Mode: major')
             self.gui.insert(self.gui.get_root(),rowno1,rowno2)
         self.gui.set_cur_index(index2)
-    
-    def move_up(self):
-        rowno = self.gui.get_cur_row()
-        if rowno == 0:
-            print('Create new group first')
-        else:
-            self.move_item_up()
-        self.set_majors()
-        self.set_minors()
-    
-    def move_down(self):
-        rowno = self.gui.get_cur_row()
-        index_ = self.gui.get_cur_index()
-        item = self.gui.get_item(index_)
-        parent = self.gui.get_parent(item)
-        if parent is None:
-            self.move_item_down()
-        else:
-            rownum = self.gui.get_row_num(parent)
-            if rowno == rownum - 1:
-                print('Create new group first')
-            else:
-                self.move_item_down()
-        self.set_majors()
-        self.set_minors()
     
     def close(self):
         self.gui.close()
