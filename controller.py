@@ -71,9 +71,16 @@ class Tree:
         else:
             if parent1 is None:
                 parent1 = item1
+            if parent2 is None:
+                parent2 = item2
             print('Multilevel strategy')
             children = self.get_children(parent1)
             print('Move what:',children)
+            parent2_index = self.gui.get_index_by_item(parent2)
+            rowno2 = self.gui.get_row(index2)
+            # Insert before, delete later since row numbers will change
+            self.gui.model.model.insertRows(rowno2,len(children),parent2_index)
+            # Referring to deleted items will cause an error
             self.gui.remove_item(index1)
     
     def test(self):
