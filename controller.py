@@ -54,6 +54,37 @@ class Tree:
         self.gui = gi.Tree()
         self.set_bindings()
     
+    def select_mode(self,index1,index2):
+        # Select same-level or multilevel strategy
+        if not index1 or not index2:
+            print('empty!')
+            return
+        item1 = self.gui.get_item(index1)
+        item2 = self.gui.get_item(index2)
+        if not item1 or not item2:
+            print('empty!')
+            return
+        parent1 = self.gui.get_parent(item1)
+        parent2 = self.gui.get_parent(item2)
+        if parent1 == parent2:
+            print('Same-level strategy')
+        else:
+            print('Multilevel strategy')
+    
+    def test(self):
+        index1 = self.gui.get_root_index(0)
+        index2 = self.gui.get_cur_index()
+        self.select_mode(index1,index2)
+    
+    def test1(self):
+        # Works: Both are root items
+        # Level 1..5..2
+        rowno1 = 4
+        rowno2 = 1
+        index1 = self.gui.get_root_index(rowno1)
+        index2 = self.gui.get_root_index(rowno2)
+        self.move_item(index1,index2)
+    
     def has_expanded(self):
         row_num = self.gui.get_row_num(self.gui.get_root())
         for rowno in range(row_num):
@@ -175,6 +206,7 @@ class Tree:
         self.gui.bind('Shift+Down',self.move_down)
         self.gui.bind('Space',self.expand_or_collapse)
         self.gui.bind('Ctrl+A',self.expand_or_collapse_all)
+        self.gui.bind('Return',self.test)
     
     def get_children(self,item):
         children = []
