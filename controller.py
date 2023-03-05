@@ -79,7 +79,11 @@ class Tree:
             parent2_index = self.gui.get_index_by_item(parent2)
             rowno2 = self.gui.get_row(index2)
             # Insert before, delete later since row numbers will change
-            self.gui.model.model.insertRows(rowno2,len(children),parent2_index)
+            children = children[::-1]
+            for i in range(len(children)):
+                self.gui.insert_row(rowno2,parent2_index)
+                item = self.gui.get_item(index2)
+                self.gui.set_text(item,children[i])
             # Referring to deleted items will cause an error
             self.gui.remove_item(index1)
     

@@ -68,8 +68,10 @@ class Tree(PyQt5.QtWidgets.QWidget):
     def get_parent(self,item):
         return item.parent()
     
+    def insert_row(self,rowno,parent_index):
+        self.model.model.insertRow(rowno,parent_index)
+    
     def insert(self,item,rowno1,rowno2):
-        #FIX: if the last root item is selected, it will be deleted
         item_list = item.takeRow(rowno1)
         item.insertRow(rowno2,item_list)
     
