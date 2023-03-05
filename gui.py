@@ -40,6 +40,10 @@ class Tree(PyQt5.QtWidgets.QWidget):
         self.setLayout(layout_)
         self.set_model()
     
+    def remove_item(self,index_):
+        # Remove item and all its children
+        self.model.model.removeRow(self.get_row(index_),index_.parent())
+    
     def get_index_above(self,index_):
         return self.tree.indexAbove(index_)
     

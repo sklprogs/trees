@@ -69,7 +69,12 @@ class Tree:
         if parent1 == parent2:
             print('Same-level strategy')
         else:
+            if parent1 is None:
+                parent1 = item1
             print('Multilevel strategy')
+            children = self.get_children(parent1)
+            print('Move what:',children)
+            self.gui.remove_item(index1)
     
     def test(self):
         index1 = self.gui.get_root_index(0)
