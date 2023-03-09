@@ -87,10 +87,24 @@ class Tree:
             # Referring to deleted items will cause an error
             self.gui.remove_item(index1)
     
+    def insert_same_level(self):
+        # Insert an item at the same level as the currently selected item
+        index_ = self.gui.get_cur_index()
+        rowno = self.gui.get_row(index_)
+        item = self.gui.get_item(index_)
+        parent_item = self.gui.get_parent(item)
+        if not parent_item:
+            parent_item = self.gui.get_root()
+        parent_index = self.gui.get_index_by_item(parent_item)
+        self.gui.insert_row(rowno,parent_index)
+    
     def test(self):
+        '''
         index1 = self.gui.get_root_index(0)
         index2 = self.gui.get_cur_index()
         self.select_mode(index1,index2)
+        '''
+        self.insert_same_level()
     
     def test1(self):
         # Works: Both are root items
