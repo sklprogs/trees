@@ -98,13 +98,32 @@ class Tree:
         parent_index = self.gui.get_index_by_item(parent_item)
         self.gui.insert_row(rowno,parent_index)
     
+    def add_major(self,text='Level2'):
+        # Add a root level if necessary
+        index_ = self.gui.get_cur_index()
+        item = self.gui.get_item(index_)
+        parent_item = self.gui.get_parent(item)
+        if not parent_item:
+            parent_item = item
+        parent_text = self.gui.get_text(parent_item)
+        if text == parent_text:
+            print('No need to insert a major')
+        else:
+            rowno = self.gui.get_row(index_)
+            parent_index = self.gui.get_index_by_item(parent_item)
+            self.gui.insert_row(rowno,parent_index)
+            item = self.gui.get_item_by_row(rowno)
+            old_text = self.gui.get_text(item)
+            self.gui.set_text(item,text)
+            print(old_text,'->',text)
+    
     def test(self):
         '''
         index1 = self.gui.get_root_index(0)
         index2 = self.gui.get_cur_index()
         self.select_mode(index1,index2)
         '''
-        self.insert_same_level()
+        self.add_major()
     
     def test1(self):
         # Works: Both are root items
