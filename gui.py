@@ -68,6 +68,10 @@ class Tree(PyQt5.QtWidgets.QWidget):
     def get_parent(self,item):
         return item.parent()
     
+    def insert_root_row(self,rowno):
+        # For some reason, passing self.get_root() causes bugs
+        self.model.model.insertRow(rowno)
+    
     def insert_row(self,rowno,parent_index):
         self.model.model.insertRow(rowno,parent_index)
     
