@@ -114,9 +114,16 @@ class Tree:
             parent_index = self.gui.get_index_by_item(parent_item)
             parent_rowno = self.gui.get_row(parent_index)
             self.gui.insert_root_row(parent_rowno)
-            index_ = self.gui.get_root_index(parent_rowno)
-            item = self.gui.get_item(index_)
-            self.gui.set_text(item,text)
+            new_parent_index = self.gui.get_root_index(parent_rowno)
+            new_parent = self.gui.get_item(new_parent_index)
+            self.gui.set_text(new_parent,text)
+            children = self.get_children(parent_item)
+            print(children)
+            for child in children[::-1]:
+                self.gui.model.model.insertRow(parent_rowno+1)
+                index_ = self.gui.get_root_index(parent_rowno+1)
+                item = self.gui.get_item(index_)
+                self.gui.set_text(item,child)
     
     def test(self):
         '''
