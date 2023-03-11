@@ -98,7 +98,7 @@ class Tree:
         parent_index = self.gui.get_index_by_item(parent_item)
         self.gui.insert_row(rowno,parent_index)
     
-    def add_major(self,text='Level22'):
+    def add_major(self,text='Level2'):
         # Add a root level if necessary
         index_ = self.gui.get_cur_index()
         item = self.gui.get_item(index_)
@@ -114,7 +114,9 @@ class Tree:
             parent_index = self.gui.get_index_by_item(parent_item)
             parent_rowno = self.gui.get_row(parent_index)
             self.gui.insert_root_row(parent_rowno)
-            print(parent_text,'->',text)
+            index_ = self.gui.get_root_index(parent_rowno)
+            item = self.gui.get_item(index_)
+            self.gui.set_text(item,text)
     
     def test(self):
         '''
