@@ -113,14 +113,11 @@ class Tree:
         else:
             parent_index = self.gui.get_index_by_item(parent_item)
             parent_rowno = self.gui.get_row(parent_index)
-            self.gui.insert_root_row(parent_rowno)
-            new_parent_index = self.gui.get_root_index(parent_rowno)
-            new_parent = self.gui.get_item(new_parent_index)
-            self.gui.set_text(new_parent,text)
+            root_item = self.gui.get_root()
+            new_parent = self.gui.insert_child(root_item,parent_rowno,text)
             children = self.get_children(parent_item)
-            print(children)
             for child in children:
-                self.gui.create_child(new_parent,child)
+                self.gui.add_child(new_parent,child)
     
     def test(self):
         '''
