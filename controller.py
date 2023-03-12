@@ -51,6 +51,8 @@ class Tree:
     def __init__(self):
         self.majors = []
         self.minors = {}
+        self.index1 = None
+        self.index2 = None
         self.gui = gi.Tree()
         self.set_bindings()
     
@@ -98,6 +100,45 @@ class Tree:
         parent_index = self.gui.get_index_by_item(parent_item)
         self.gui.insert_row(rowno,parent_index)
     
+    def add_indices(self):
+        if not self.index1:
+            self.index1 = self.gui.get_cur_index()
+            print('1st index added')
+            return
+        if not self.index2:
+            self.index2 = self.gui.get_cur_index()
+            print('2nd index added')
+            if self.index1 == self.index2:
+                print('Same index!')
+            return
+        print('lazy')
+    
+    def divide(self):
+        f = '[Trees] controller.Tree.divide'
+        if not self.index1 or not self.index2:
+            print(f,'empty!')
+            return
+        # Get initial selection
+        minor1_item = self.gui.get_item(self.index1)
+        major1_item = self.gui.get_parent(minor1_item)
+        if not major1_item:
+            print(f,'Copy instead of dividing')
+            return
+        minor1_text = self.gui.get_text(minor1_item)
+        major1_text = self.gui.get_text(major1_item)
+        # Get final selection
+        minor2_item = self.gui.get_item(self.index2)
+        major2_item = self.gui.get_parent(minor2_item)
+        if not major2_item:
+            print(f,'Use another strategy')
+            return
+        minor2_text = self.gui.get_text(minor2_item)
+        major2_text = self.gui.get_text(major2_item)
+        print('Minor1:',minor1_text)
+        print('Major1:',major1_text)
+        print('Minor2:',minor2_text)
+        print('Major2:',major2_text)
+    
     def add_major(self,text='Level2'):
         # Add a root level if necessary
         index_ = self.gui.get_cur_index()
@@ -125,7 +166,8 @@ class Tree:
         index2 = self.gui.get_cur_index()
         self.select_mode(index1,index2)
         '''
-        self.add_major()
+        #self.add_major()
+        self.divide()
     
     def test1(self):
         # Works: Both are root items
@@ -258,6 +300,7 @@ class Tree:
         self.gui.bind('Space',self.expand_or_collapse)
         self.gui.bind('Ctrl+A',self.expand_or_collapse_all)
         self.gui.bind('Return',self.test)
+        self.gui.bind('a',self.add_indices)
     
     def get_children(self,item):
         children = []
