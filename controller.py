@@ -4,6 +4,9 @@ import PyQt5.QtWidgets
 
 import gui as gi
 
+from skl_shared_qt.localize import _
+import skl_shared_qt.shared as sh
+
 
 
 class Tree:
@@ -138,6 +141,35 @@ class Tree:
         print('Major1:',major1_text)
         print('Minor2:',minor2_text)
         print('Major2:',major2_text)
+        if major1_text == major2_text:
+            print(f,'Use another strategy')
+            return
+        major2_children = self.get_children(major2_item)
+        print('major2_children:',major2_children)
+        list1, list2 = sh.List(major2_children).split_by_item(minor2_text)
+        print('list1:',list1)
+        print('list2:',list2)
+        major2_index = self.gui.get_index_by_item(major2_item)
+        major2_rowno = self.gui.get_row(major2_index)
+        print('major2_rowno:',major2_rowno)
+        major21 = self.gui.insert_child (parent = self.gui.get_root()
+                                        ,rowno = major2_rowno
+                                        ,text = major2_text
+                                        )
+        for child in list1:
+            self.gui.add_child(major21,child)
+        major22 = self.gui.insert_child (parent = self.gui.get_root()
+                                        ,rowno = major2_rowno + 1
+                                        ,text = major1_text
+                                        )
+        self.gui.add_child(major22,minor1_text)
+        major23 = self.gui.insert_child (parent = self.gui.get_root()
+                                        ,rowno = major2_rowno + 2
+                                        ,text = major2_text
+                                        )
+        for child in list2:
+            self.gui.add_child(major23,child)
+        self.gui.expand_all()
     
     def add_major(self,text='Level2'):
         # Add a root level if necessary
