@@ -170,6 +170,7 @@ class Tree:
         for child in list2:
             self.gui.add_child(major23,child)
         self.gui.expand_all()
+        self.gui.remove_children(major2_rowno+3)
     
     def add_major(self,text='Level2'):
         # Add a root level if necessary

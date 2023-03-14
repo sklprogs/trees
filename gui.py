@@ -40,6 +40,10 @@ class Tree(PyQt5.QtWidgets.QWidget):
         self.setLayout(layout_)
         self.set_model()
     
+    def remove_children(self,root_rowno):
+        while self.model.model.item(root_rowno).rowCount():
+            items = self.model.model.item(root_rowno).takeRow(0)
+    
     def add_child(self,parent,text):
         child = PyQt5.QtGui.QStandardItem(text)
         parent.appendRow(child)
