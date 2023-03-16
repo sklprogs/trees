@@ -152,6 +152,7 @@ class Tree:
         major2_index = self.gui.get_index_by_item(major2_item)
         major2_rowno = self.gui.get_row(major2_index)
         print('major2_rowno:',major2_rowno)
+        self.gui.remove_group(major2_index,major2_rowno)
         major21 = self.gui.insert_child (parent = self.gui.get_root()
                                         ,rowno = major2_rowno
                                         ,text = major2_text
@@ -170,8 +171,8 @@ class Tree:
         for child in list2:
             self.gui.add_child(major23,child)
         self.gui.expand_all()
-        self.gui.remove_children(major2_rowno+3)
-        self.gui.remove_major(major2_rowno+3)
+        #self.gui.remove_children(major2_rowno+3)
+        #self.gui.remove_major(major2_rowno+3)
     
     def add_major(self,text='Level2'):
         # Add a root level if necessary
@@ -347,6 +348,9 @@ class Tree:
             return children
         for i in range(rownum):
             subitem = self.gui.get_child(item,i,0)
+            if not subitem:
+                print('Avoid None')
+                continue
             children.append(self.gui.get_text(subitem))
         return children
 
