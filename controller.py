@@ -171,6 +171,8 @@ class Tree:
         for child in list2:
             self.gui.add_child(major23,child)
         self.gui.expand_all()
+        # Old indices left after deleting rows will cause a segfault
+        self.index1 = self.index2 = None
         #self.gui.remove_children(major2_rowno+3)
         #self.gui.remove_major(major2_rowno+3)
     
