@@ -152,7 +152,7 @@ class Tree:
         major2_index = self.gui.get_index_by_item(major2_item)
         major2_rowno = self.gui.get_row(major2_index)
         print('major2_rowno:',major2_rowno)
-        self.gui.remove_group(major2_index,major2_rowno)
+        self.gui.remove_group(major2_rowno)
         major21 = self.gui.insert_child (parent = self.gui.get_root()
                                         ,rowno = major2_rowno
                                         ,text = major2_text
