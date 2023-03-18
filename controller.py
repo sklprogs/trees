@@ -153,6 +153,7 @@ class Tree:
         major2_rowno = self.gui.get_row(major2_index)
         print('major2_rowno:',major2_rowno)
         self.gui.remove_group(major2_rowno)
+        self.gui.remove_item(self.index1)
         major21 = self.gui.insert_child (parent = self.gui.get_root()
                                         ,rowno = major2_rowno
                                         ,text = major2_text
@@ -163,13 +164,15 @@ class Tree:
                                         ,rowno = major2_rowno + 1
                                         ,text = major1_text
                                         )
-        self.gui.add_child(major22,minor1_text)
+        minor22_item = self.gui.add_child(major22,minor1_text)
+        minor22_index = self.gui.get_index_by_item(minor22_item)
         major23 = self.gui.insert_child (parent = self.gui.get_root()
                                         ,rowno = major2_rowno + 2
                                         ,text = major2_text
                                         )
         for child in list2:
             self.gui.add_child(major23,child)
+        self.gui.set_cur_index(minor22_index)
         self.gui.expand_all()
         # Old indices left after deleting rows will cause a segfault
         self.index1 = self.index2 = None
