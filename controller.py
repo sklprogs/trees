@@ -116,6 +116,30 @@ class Tree:
             return
         print('lazy')
     
+    def remove_empty_majors(self):
+        f = 'remove_empty_majors'
+        empty = []
+        rownum = self.gui.get_row_num(self.gui.get_root())
+        for rowno in range(rownum):
+            major_index = self.gui.get_root_index(rowno)
+            if not self.gui.has_children(major_index):
+                empty.append(major_index)
+        if not empty:
+            print(f,'empty!')
+            return
+        for index_ in empty:
+            item = self.gui.get_item(index_)
+            mes = 'Removing empty "{}"'.format(self.gui.get_text(item))
+            print(f,mes)
+            self.gui.remove_item(index_)
+    
+    def get_empty_parent_index(self,minor_index):
+        minor_item = self.gui.get_item(minor_index)
+        parent_item = self.gui.get_parent(minor_item)
+        if not parent_item:
+            return
+        return self.gui.get_index_by_item(parent_item)
+    
     def divide(self):
         f = '[Trees] controller.Tree.divide'
         if not self.index1 or not self.index2:
@@ -153,6 +177,8 @@ class Tree:
         major2_rowno = self.gui.get_row(major2_index)
         print('major2_rowno:',major2_rowno)
         self.gui.remove_group(major2_rowno)
+        # Do this before deleting the minor
+        #empty_parent_index = self.get_empty_parent_index(self.index1)
         self.gui.remove_item(self.index1)
         major21 = self.gui.insert_child (parent = self.gui.get_root()
                                         ,rowno = major2_rowno
@@ -174,6 +200,9 @@ class Tree:
             self.gui.add_child(major23,child)
         self.gui.set_cur_index(minor22_index)
         self.gui.expand_all()
+        self.remove_empty_majors()
+        #if empty_parent_index:
+        #    self.gui.remove_item(empty_parent_index)
         # Old indices left after deleting rows will cause a segfault
         self.index1 = self.index2 = None
         #self.gui.remove_children(major2_rowno+3)

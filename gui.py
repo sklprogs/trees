@@ -40,6 +40,9 @@ class Tree(PyQt5.QtWidgets.QWidget):
         self.setLayout(layout_)
         self.set_model()
     
+    def has_children(self,index_):
+        return self.model.model.hasChildren(index_)
+    
     def remove_group(self,major_rowno):
         # No need to remove children separately, just remove the major
         self.model.model.removeRow(major_rowno)
