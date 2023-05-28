@@ -4,7 +4,7 @@ import PyQt5.QtWidgets
 
 import gui as gi
 
-from skl_shared_qt.localize import _
+#from skl_shared_qt.localize import _
 import skl_shared_qt.shared as sh
 
 
@@ -59,7 +59,7 @@ class Tree:
         self.gui = gi.Tree()
         self.set_bindings()
     
-    def select_mode(self,index1,index2):
+    def select_mode(self, index1, index2):
         # Select same-level or multilevel strategy
         if not index1 or not index2:
             print('empty!')
@@ -86,7 +86,7 @@ class Tree:
             # Insert before, delete later since row numbers will change
             children = children[::-1]
             for i in range(len(children)):
-                self.gui.insert_row(rowno2,parent2_index)
+                self.gui.insert_row(rowno2, parent2_index)
                 item = self.gui.get_item(index2)
                 self.gui.set_text(item,children[i])
             # Referring to deleted items will cause an error
@@ -101,7 +101,7 @@ class Tree:
         if not parent_item:
             parent_item = self.gui.get_root()
         parent_index = self.gui.get_index_by_item(parent_item)
-        self.gui.insert_row(rowno,parent_index)
+        self.gui.insert_row(rowno, parent_index)
     
     def add_indices(self):
         if not self.index1:
@@ -125,7 +125,7 @@ class Tree:
             if not self.gui.has_children(major_index):
                 empty.append(major_index)
         if not empty:
-            print(f,'empty!')
+            print(f, 'empty!')
             return
         for index_ in empty:
             item = self.gui.get_item(index_)
@@ -133,7 +133,7 @@ class Tree:
             print(f,mes)
             self.gui.remove_item(index_)
     
-    def get_empty_parent_index(self,minor_index):
+    def get_empty_parent_index(self, minor_index):
         minor_item = self.gui.get_item(minor_index)
         parent_item = self.gui.get_parent(minor_item)
         if not parent_item:
@@ -149,7 +149,7 @@ class Tree:
         minor1_item = self.gui.get_item(self.index1)
         major1_item = self.gui.get_parent(minor1_item)
         if not major1_item:
-            print(f,'Copy instead of dividing')
+            print(f, 'Copy instead of dividing')
             return
         minor1_text = self.gui.get_text(minor1_item)
         major1_text = self.gui.get_text(major1_item)
@@ -161,21 +161,21 @@ class Tree:
             return
         minor2_text = self.gui.get_text(minor2_item)
         major2_text = self.gui.get_text(major2_item)
-        print('Minor1:',minor1_text)
-        print('Major1:',major1_text)
-        print('Minor2:',minor2_text)
-        print('Major2:',major2_text)
+        print('Minor1:', minor1_text)
+        print('Major1:', major1_text)
+        print('Minor2:', minor2_text)
+        print('Major2:', major2_text)
         if major1_text == major2_text:
-            print(f,'Use another strategy')
+            print(f, 'Use another strategy')
             return
         major2_children = self.get_children(major2_item)
-        print('major2_children:',major2_children)
+        print('major2_children:', major2_children)
         list1, list2 = sh.List(major2_children).split_by_item(minor2_text)
-        print('list1:',list1)
-        print('list2:',list2)
+        print('list1:', list1)
+        print('list2:', list2)
         major2_index = self.gui.get_index_by_item(major2_item)
         major2_rowno = self.gui.get_row(major2_index)
-        print('major2_rowno:',major2_rowno)
+        print('major2_rowno:', major2_rowno)
         self.gui.remove_group(major2_rowno)
         # Do this before deleting the minor
         #empty_parent_index = self.get_empty_parent_index(self.index1)
@@ -185,19 +185,19 @@ class Tree:
                                         ,text = major2_text
                                         )
         for child in list1:
-            self.gui.add_child(major21,child)
+            self.gui.add_child(major21, child)
         major22 = self.gui.insert_child (parent = self.gui.get_root()
                                         ,rowno = major2_rowno + 1
                                         ,text = major1_text
                                         )
-        minor22_item = self.gui.add_child(major22,minor1_text)
+        minor22_item = self.gui.add_child(major22, minor1_text)
         minor22_index = self.gui.get_index_by_item(minor22_item)
         major23 = self.gui.insert_child (parent = self.gui.get_root()
                                         ,rowno = major2_rowno + 2
                                         ,text = major2_text
                                         )
         for child in list2:
-            self.gui.add_child(major23,child)
+            self.gui.add_child(major23, child)
         self.gui.set_cur_index(minor22_index)
         self.gui.expand_all()
         self.remove_empty_majors()
@@ -208,7 +208,7 @@ class Tree:
         #self.gui.remove_children(major2_rowno+3)
         #self.gui.remove_major(major2_rowno+3)
     
-    def add_major(self,text='Level2'):
+    def add_major(self, text='Level2'):
         # Add a root level if necessary
         index_ = self.gui.get_cur_index()
         item = self.gui.get_item(index_)
@@ -224,16 +224,16 @@ class Tree:
             parent_index = self.gui.get_index_by_item(parent_item)
             parent_rowno = self.gui.get_row(parent_index)
             root_item = self.gui.get_root()
-            new_parent = self.gui.insert_child(root_item,parent_rowno,text)
+            new_parent = self.gui.insert_child(root_item, parent_rowno, text)
             children = self.get_children(parent_item)
             for child in children:
-                self.gui.add_child(new_parent,child)
+                self.gui.add_child(new_parent, child)
     
     def test(self):
         '''
         index1 = self.gui.get_root_index(0)
         index2 = self.gui.get_cur_index()
-        self.select_mode(index1,index2)
+        self.select_mode(index1, index2)
         '''
         #self.add_major()
         self.divide()
@@ -265,9 +265,9 @@ class Tree:
             print('empty!')
             return
         if self.gui.is_expanded(index_):
-            self.gui.set_expanded(index_,False)
+            self.gui.set_expanded(index_, False)
         else:
-            self.gui.set_expanded(index_,True)
+            self.gui.set_expanded(index_, True)
     
     def move_up(self):
         index1 = self.gui.get_cur_index()
@@ -282,7 +282,7 @@ class Tree:
             print('lazy!')
             return
         rowno2 = rowno1 - 1
-        self._move_by_row(index1,rowno1,rowno2)
+        self._move_by_row(index1, rowno1, rowno2)
     
     def move_down(self):
         index1 = self.gui.get_cur_index()
@@ -308,9 +308,9 @@ class Tree:
             print('lazy!')
             return
         rowno2 = rowno1 + 1
-        self._move_by_row(index1,rowno1,rowno2)
+        self._move_by_row(index1, rowno1, rowno2)
     
-    def _move_by_row(self,index1,rowno1,rowno2):
+    def _move_by_row(self, index1, rowno1, rowno2):
         item1 = self.gui.get_item(index1)
         if item1 is None:
             print('empty!')
@@ -325,10 +325,10 @@ class Tree:
         if parent_index is None:
             print('empty!')
             return
-        index2 = self.gui.get_index(rowno2,parent_index)
-        self.move_item(index1,index2)
+        index2 = self.gui.get_index(rowno2, parent_index)
+        self.move_item(index1, index2)
     
-    def move_item(self,index1,index2):
+    def move_item(self, index1, index2):
         if index1 is None or index2 is None:
             print('empty!')
             return
@@ -340,13 +340,13 @@ class Tree:
         parent = self.gui.get_parent(item1)
         rowno1 = self.gui.get_row(index1)
         rowno2 = self.gui.get_row(index2)
-        print('rowno1:',rowno1,', rowno2:',rowno2)
+        print('rowno1:', rowno1, ', rowno2:', rowno2)
         if parent:
             print('Mode: minor')
-            self.gui.insert(parent,rowno1,rowno2)
+            self.gui.insert(parent, rowno1, rowno2)
         else:
             print('Mode: major')
-            self.gui.insert(self.gui.get_root(),rowno1,rowno2)
+            self.gui.insert(self.gui.get_root(), rowno1, rowno2)
         self.gui.set_cur_index(index2)
     
     def close(self):
@@ -363,15 +363,15 @@ class Tree:
         self.gui.fill(dic)
     
     def set_bindings(self):
-        self.gui.bind('Escape',self.close)
-        self.gui.bind('Shift+Up',self.move_up)
-        self.gui.bind('Shift+Down',self.move_down)
-        self.gui.bind('Space',self.expand_or_collapse)
-        self.gui.bind('Ctrl+A',self.expand_or_collapse_all)
-        self.gui.bind('Return',self.test)
-        self.gui.bind('a',self.add_indices)
+        self.gui.bind('Escape', self.close)
+        self.gui.bind('Shift+Up', self.move_up)
+        self.gui.bind('Shift+Down', self.move_down)
+        self.gui.bind('Space', self.expand_or_collapse)
+        self.gui.bind('Ctrl+A', self.expand_or_collapse_all)
+        self.gui.bind('Return', self.test)
+        self.gui.bind('a', self.add_indices)
     
-    def get_children(self,item):
+    def get_children(self, item):
         children = []
         if not item:
             print('empty!')
@@ -381,7 +381,7 @@ class Tree:
             print('empty!')
             return children
         for i in range(rownum):
-            subitem = self.gui.get_child(item,i,0)
+            subitem = self.gui.get_child(item, i, 0)
             if not subitem:
                 print('Avoid None')
                 continue
@@ -401,20 +401,20 @@ class Tree:
             print('empty!')
             return
         for i in range(len(self.majors)):
-            item = self.gui.get_child(root,i,0)
+            item = self.gui.get_child(root, i, 0)
             self.minors[self.majors[i]] = self.get_children(item)
         print('Minors:',self.minors)
 
 
 if __name__ == '__main__':
-    dic = {'Level1': ['Level1_item1','Level1_item2','Level1_item3']
-          ,'Level2': ['Level2_item1','Level2_item2','Level2_item3'
+    dic = {'Level1': ['Level1_item1', 'Level1_item2', 'Level1_item3']
+          ,'Level2': ['Level2_item1', 'Level2_item2', 'Level2_item3'
                      ,'Level2_item4'
                      ]
-          ,'Level3': ['Level3_item1','Level3_item2','Level3_item3']
-          ,'Level4': ['Level4_item1','Level4_item2']
-          ,'Level5': ['Level5_item1','Level5_item2','Level5_item3'
-                     ,'Level5_item4','Level5_item5'
+          ,'Level3': ['Level3_item1', 'Level3_item2', 'Level3_item3']
+          ,'Level4': ['Level4_item1', 'Level4_item2']
+          ,'Level5': ['Level5_item1', 'Level5_item2', 'Level5_item3'
+                     ,'Level5_item4', 'Level5_item5'
                      ]
           }
     app = PyQt5.QtWidgets.QApplication(sys.argv)
