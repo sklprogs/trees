@@ -226,7 +226,7 @@ class MyTreeWidget(PyQt5.QtWidgets.QTreeWidget, MyTreeView):
         elif rect.bottom() - pos.y() < margin:
             r = PyQt5.QtWidgets.QAbstractItemView.BelowItem
 
-        # this rect is always the first column rect
+        # This rect is always the first column rect
         # elif rect.contains(pos, True):
         elif pos.y() - rect.top() > margin and rect.bottom() - pos.y() > margin:
             r = PyQt5.QtWidgets.QAbstractItemView.OnItem
@@ -277,7 +277,7 @@ class MyTreeWidget(PyQt5.QtWidgets.QTreeWidget, MyTreeView):
 
         lst[0], lst[1], lst[2], lst[3] = event, row, col, index
 
-        # if not self.droppingOnItself(event, index):
+        #if not self.droppingOnItself(event, index):
         return True
 
 
@@ -353,8 +353,7 @@ class UI(PyQt5.QtWidgets.QDialog):
         self.treeWidget.setCurrentItem(parent)
 
     def addCmd(self, i=None, parent=None):
-        'add a level to tree widget'
-
+        # Add a level to tree widget
         root = self.treeWidget.invisibleRootItem()
         if not parent:
             parent = root
