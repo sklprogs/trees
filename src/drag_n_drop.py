@@ -361,9 +361,9 @@ class UI(PyQt5.QtWidgets.QDialog):
                 i = self.treeWidget.topLevelItemCount()
             else:
                 i = str(parent.text(0))[7:]
-                i = '%s-%s' % (i, parent.childCount() + 1)
+                i = f'{i}-{parent.childCount() + 1}'
 
-        item = PyQt5.QtWidgets.QTreeWidgetItem(parent, ['script %s' % i, '1', '150'])
+        item = PyQt5.QtWidgets.QTreeWidgetItem(parent, [f'script {i}', '1', '150'])
 
         self.treeWidget.setCurrentItem(item)
         self.treeWidget.expandAll()
