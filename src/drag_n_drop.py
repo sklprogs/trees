@@ -25,15 +25,17 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 '''
 
-import sys
 import PyQt5
 import PyQt5.QtWidgets
 
+from skl_shared_qt.localize import _
+import skl_shared_qt.shared as sh   
 
-class MyTreeView(PyQt5.QtWidgets.QTreeView):
+
+class View(PyQt5.QtWidgets.QTreeView):
 
     def __init__(self, parent=None):
-        super(MyTreeView, self).__init__(parent)
+        super(View, self).__init__(parent)
         self.dropIndicatorRect = PyQt5.QtCore.QRect()
 
     def paintEvent(self, event):
@@ -62,7 +64,7 @@ class MyTreeView(PyQt5.QtWidgets.QTreeView):
 
 
 
-class MyTreeWidget(PyQt5.QtWidgets.QTreeWidget, MyTreeView):
+class Tree(PyQt5.QtWidgets.QTreeWidget, View):
 
     def startDrag(self, supportedActions):
         listsQModelIndex = self.selectedIndexes()
@@ -280,98 +282,132 @@ class MyTreeWidget(PyQt5.QtWidgets.QTreeWidget, MyTreeView):
 
 
 
-class UI(PyQt5.QtWidgets.QDialog):
+class UI(PyQt5.QtWidgets.QWidget):
 
-    def __init__(self, args=None, parent=None):
-        super(UI, self).__init__(parent)
-        self.layout1 = PyQt5.QtWidgets.QVBoxLayout(self)
-        treeWidget = MyTreeWidget()
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.set_gui()
+    
+    def set_gui(self):
+        self.set_title(_('Subject prioritization'))
+        #self.set_icon()
+        self.set_layouts()
+        self.set_widgets()
+        #self.set_buttons()
+        self.add_widgets()
+        #self.add_buttons()
+        self.customize()
+    
+    def customize(self):
+        #self.lay_prm.setContentsMargins(0, 0, 0, 0)
+        self.lay_sec.setContentsMargins(0, 0, 0, 0)
+        self.lay_btn.setContentsMargins(4, 4, 4, 4)
+        self.lay_ter.setContentsMargins(2, 4, 2, 0)
+        self.lay_rht.setContentsMargins(0, 0, 0, 0)
+        self.tree.setSelectionMode(PyQt5.QtWidgets.QAbstractItemView.ExtendedSelection)
+        self.tree.setDragDropMode(PyQt5.QtWidgets.QAbstractItemView.InternalMove)
+        self.tree.setStyleSheet ('''
+                                 QTreeView {
+                                     show-decoration-selected: 1;
+                                 }
 
-        treeWidget.setSelectionMode(PyQt5.QtWidgets.QAbstractItemView.ExtendedSelection)
+                                 QTreeView::item:hover {
+                                     background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 #e7effd, stop: 1 #cbdaf1);
+                                 }
 
-        button1 = PyQt5.QtWidgets.QPushButton('Add')
-        button2 = PyQt5.QtWidgets.QPushButton('Add Child')
+                                 QTreeView::item:selected:active{
+                                     background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 #6ea1f1, stop: 1 #567dbc);
+                                 }
 
-        self.layout1.addWidget(treeWidget)
-
-        self.layout2 = PyQt5.QtWidgets.QHBoxLayout()
-        self.layout2.addWidget(button1)
-        self.layout2.addWidget(button2)
-
-        self.layout1.addLayout(self.layout2)
-
-        treeWidget.setHeaderHidden(True)
-
-        self.treeWidget = treeWidget
-        self.button1 = button1
-        self.button2 = button2
-        self.button1.clicked.connect(lambda *x: self.addCmd())
-        self.button2.clicked.connect(lambda *x: self.addChildCmd())
-
-        HEADERS = ("script", "chunksize", "mem")
-        self.treeWidget.setHeaderLabels(HEADERS)
-        self.treeWidget.setColumnCount(len(HEADERS))
-
-        self.treeWidget.setColumnWidth(0, 160)
-        self.treeWidget.header().show()
-
-        self.treeWidget.setDragDropMode(PyQt5.QtWidgets.QAbstractItemView.InternalMove)
-        self.treeWidget.setStyleSheet('''
-                                         QTreeView {
-                                             show-decoration-selected: 1;
-                                         }
-
-                                         QTreeView::item:hover {
-                                             background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 #e7effd, stop: 1 #cbdaf1);
-                                         }
-
-                                         QTreeView::item:selected:active{
-                                             background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 #6ea1f1, stop: 1 #567dbc);
-                                         }
-
-                                         QTreeView::item:selected:!active {
-                                             background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 #6b9be8, stop: 1 #577fbf);
-                                         }
-                                         ''')
-
-        self.resize(500, 350)
+                                 QTreeView::item:selected:!active {
+                                     background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 #6b9be8, stop: 1 #577fbf);
+                                 }
+                                 ''')
+        self.setStyleSheet('QTreeWidget::item{ height: 30px;  }')
+    
+    def set_layouts(self):
+        self.lay_prm = PyQt5.QtWidgets.QVBoxLayout()
+        self.lay_sec = PyQt5.QtWidgets.QGridLayout()
+        self.lay_ter = PyQt5.QtWidgets.QGridLayout()
+        self.lay_btn = PyQt5.QtWidgets.QVBoxLayout()
+        self.lay_rht = PyQt5.QtWidgets.QHBoxLayout()
+    
+    def set_widgets(self):
+        self.lbx_lft = View()
+        self.lbx_rht = View()
+        self.prm_sec = PyQt5.QtWidgets.QWidget()
+        self.prm_ter = PyQt5.QtWidgets.QWidget()
+        self.prm_btn = PyQt5.QtWidgets.QWidget()
+        self.prm_rht = PyQt5.QtWidgets.QWidget()
+        self.cbx_pri = sh.CheckBox(_('Prioritize subjects'))
+        sources = (_('All subjects'), _('Main'), _('From the article'))
+        self.opt_src = sh.OptionMenu(sources)
+        self.tree = Tree()
+    
+    def add_widgets(self):
+        self.lay_prm.addWidget(self.prm_sec)
+        self.lay_prm.addWidget(self.prm_ter)
+        #self.lay_sec.addWidget(self.lbx_lft, 0, 0)
+        self.lay_sec.addWidget(self.tree, 0, 0)
+        self.lay_sec.addWidget(self.prm_btn, 0, 1)
+        #self.lay_sec.addWidget(self.lbx_rht, 0, 2)
+        self.lay_sec.addWidget(self.tree, 0, 2)
+        #self.lay_ter.addWidget(self.btn_res.widget, 0, 1, PyQt5.QtCore.Qt.AlignLeft)
+        self.lay_ter.addWidget(self.cbx_pri.widget, 0, 2, PyQt5.QtCore.Qt.AlignCenter)
+        self.lay_ter.addWidget(self.prm_rht, 0, 3, PyQt5.QtCore.Qt.AlignRight)
+        self.lay_rht.addWidget(self.opt_src.widget)
+        #self.lay_rht.addWidget(self.btn_apl.widget)
+        self.prm_sec.setLayout(self.lay_sec)
+        self.prm_btn.setLayout(self.lay_btn)
+        self.prm_ter.setLayout(self.lay_ter)
+        self.prm_rht.setLayout(self.lay_rht)
+        self.setLayout(self.lay_prm)
+    
+    def fill(self):
         for i in range(6):
             item = self.addCmd(i)
             if i in (3, 4):
                 self.addChildCmd()
                 if i == 4:
                     self.addCmd(f'{i}-2', parent=item)
-
-        self.treeWidget.expandAll()
-        self.setStyleSheet("QTreeWidget::item{ height: 30px;  }")
+    
+    def set_title(self, title):
+        self.setWindowTitle(title)
+    
+    def centralize(self):
+        self.move(sh.objs.get_root().desktop().screen().rect().center() - self.rect().center())
 
     def addChildCmd(self):
-        parent = self.treeWidget.currentItem()
+        parent = self.tree.currentItem()
         self.addCmd(parent=parent)
-        self.treeWidget.setCurrentItem(parent)
+        self.tree.setCurrentItem(parent)
 
     def addCmd(self, i=None, parent=None):
         # Add a level to tree widget
-        root = self.treeWidget.invisibleRootItem()
+        root = self.tree.invisibleRootItem()
         if not parent:
             parent = root
 
         if i is None:
             if parent == root:
-                i = self.treeWidget.topLevelItemCount()
+                i = self.tree.topLevelItemCount()
             else:
                 i = str(parent.text(0))[7:]
                 i = f'{i}-{parent.childCount() + 1}'
 
         item = PyQt5.QtWidgets.QTreeWidgetItem(parent, [f'script {i}', '1', '150'])
 
-        self.treeWidget.setCurrentItem(item)
-        self.treeWidget.expandAll()
+        self.tree.setCurrentItem(item)
+        self.tree.expandAll()
         return item
 
 
 if __name__ == '__main__':
-    app = PyQt5.QtWidgets.QApplication(sys.argv)
-    gui = UI()
-    gui.show()
-    app.exec_()
+    f = '[trees] drag_n_drop.__main__'
+    sh.com.start()
+    iui = UI()
+    iui.fill()
+    iui.show()
+    iui.resize(800, 450)
+    iui.centralize()
+    sh.com.end()
