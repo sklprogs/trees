@@ -286,6 +286,23 @@ class UI(PyQt5.QtWidgets.QWidget):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+        self.tree_style = '''
+                          QTreeView {
+                              show-decoration-selected: 1;
+                          }
+
+                          QTreeView::item:hover {
+                              background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 #e7effd, stop: 1 #cbdaf1);
+                          }
+
+                          QTreeView::item:selected:active{
+                              background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 #6ea1f1, stop: 1 #567dbc);
+                          }
+
+                          QTreeView::item:selected:!active {
+                              background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 #6b9be8, stop: 1 #577fbf);
+                          }
+                          '''
         self.set_gui()
     
     def set_gui(self):
@@ -304,25 +321,12 @@ class UI(PyQt5.QtWidgets.QWidget):
         self.lay_btn.setContentsMargins(4, 4, 4, 4)
         self.lay_ter.setContentsMargins(2, 4, 2, 0)
         self.lay_rht.setContentsMargins(0, 0, 0, 0)
-        self.tree.setSelectionMode(PyQt5.QtWidgets.QAbstractItemView.ExtendedSelection)
-        self.tree.setDragDropMode(PyQt5.QtWidgets.QAbstractItemView.InternalMove)
-        self.tree.setStyleSheet ('''
-                                 QTreeView {
-                                     show-decoration-selected: 1;
-                                 }
-
-                                 QTreeView::item:hover {
-                                     background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 #e7effd, stop: 1 #cbdaf1);
-                                 }
-
-                                 QTreeView::item:selected:active{
-                                     background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 #6ea1f1, stop: 1 #567dbc);
-                                 }
-
-                                 QTreeView::item:selected:!active {
-                                     background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 #6b9be8, stop: 1 #577fbf);
-                                 }
-                                 ''')
+        self.tree1.setSelectionMode(PyQt5.QtWidgets.QAbstractItemView.ExtendedSelection)
+        self.tree2.setSelectionMode(PyQt5.QtWidgets.QAbstractItemView.ExtendedSelection)
+        self.tree1.setDragDropMode(PyQt5.QtWidgets.QAbstractItemView.InternalMove)
+        self.tree2.setDragDropMode(PyQt5.QtWidgets.QAbstractItemView.InternalMove)
+        self.tree1.setStyleSheet(self.tree_style)
+        self.tree2.setStyleSheet(self.tree_style)
         self.setStyleSheet('QTreeWidget::item{ height: 30px;  }')
     
     def set_layouts(self):
@@ -342,16 +346,17 @@ class UI(PyQt5.QtWidgets.QWidget):
         self.cbx_pri = sh.CheckBox(_('Prioritize subjects'))
         sources = (_('All subjects'), _('Main'), _('From the article'))
         self.opt_src = sh.OptionMenu(sources)
-        self.tree = Tree()
+        self.tree1 = Tree()
+        self.tree2 = Tree()
     
     def add_widgets(self):
         self.lay_prm.addWidget(self.prm_sec)
         self.lay_prm.addWidget(self.prm_ter)
         #self.lay_sec.addWidget(self.lbx_lft, 0, 0)
-        self.lay_sec.addWidget(self.tree, 0, 0)
+        self.lay_sec.addWidget(self.tree1, 0, 0)
         self.lay_sec.addWidget(self.prm_btn, 0, 1)
         #self.lay_sec.addWidget(self.lbx_rht, 0, 2)
-        self.lay_sec.addWidget(self.tree, 0, 2)
+        self.lay_sec.addWidget(self.tree2, 0, 2)
         #self.lay_ter.addWidget(self.btn_res.widget, 0, 1, PyQt5.QtCore.Qt.AlignLeft)
         self.lay_ter.addWidget(self.cbx_pri.widget, 0, 2, PyQt5.QtCore.Qt.AlignCenter)
         self.lay_ter.addWidget(self.prm_rht, 0, 3, PyQt5.QtCore.Qt.AlignRight)
@@ -363,13 +368,21 @@ class UI(PyQt5.QtWidgets.QWidget):
         self.prm_rht.setLayout(self.lay_rht)
         self.setLayout(self.lay_prm)
     
-    def fill(self):
+    def fill1(self):
         for i in range(6):
-            item = self.addCmd(i)
+            item = self.addCmd(self.tree1, i)
             if i in (3, 4):
-                self.addChildCmd()
+                self.addChildCmd(self.tree1)
                 if i == 4:
-                    self.addCmd(f'{i}-2', parent=item)
+                    self.addCmd(self.tree1, f'{i}-2', parent=item)
+    
+    def fill2(self):
+        for i in range(6):
+            item = self.addCmd(self.tree2, i)
+            if i in (3, 4):
+                self.addChildCmd(self.tree2)
+                if i == 4:
+                    self.addCmd(self.tree2, f'{i}-2', parent=item)
     
     def set_title(self, title):
         self.setWindowTitle(title)
@@ -377,28 +390,28 @@ class UI(PyQt5.QtWidgets.QWidget):
     def centralize(self):
         self.move(sh.objs.get_root().desktop().screen().rect().center() - self.rect().center())
 
-    def addChildCmd(self):
-        parent = self.tree.currentItem()
-        self.addCmd(parent=parent)
-        self.tree.setCurrentItem(parent)
+    def addChildCmd(self, tree):
+        parent = tree.currentItem()
+        self.addCmd(tree, parent=parent)
+        tree.setCurrentItem(parent)
 
-    def addCmd(self, i=None, parent=None):
+    def addCmd(self, tree, i=None, parent=None):
         # Add a level to tree widget
-        root = self.tree.invisibleRootItem()
+        root = tree.invisibleRootItem()
         if not parent:
             parent = root
 
         if i is None:
             if parent == root:
-                i = self.tree.topLevelItemCount()
+                i = tree.topLevelItemCount()
             else:
                 i = str(parent.text(0))[7:]
                 i = f'{i}-{parent.childCount() + 1}'
 
         item = PyQt5.QtWidgets.QTreeWidgetItem(parent, [f'script {i}', '1', '150'])
 
-        self.tree.setCurrentItem(item)
-        self.tree.expandAll()
+        tree.setCurrentItem(item)
+        tree.expandAll()
         return item
 
 
@@ -406,7 +419,8 @@ if __name__ == '__main__':
     f = '[trees] drag_n_drop.__main__'
     sh.com.start()
     iui = UI()
-    iui.fill()
+    iui.fill1()
+    iui.fill2()
     iui.show()
     iui.resize(800, 450)
     iui.centralize()
