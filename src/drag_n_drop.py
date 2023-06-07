@@ -137,80 +137,78 @@ class MyTreeWidget(PyQt5.QtWidgets.QTreeWidget, MyTreeView):
             index = self.indexFromItem(item)
             self.model().setData(index, 0, PyQt5.QtCore.Qt.UserRole)
 
-        if event.source == self and event.dropAction() == PyQt5.QtCore.Qt.MoveAction \
-        or self.dragDropMode() == PyQt5.QtWidgets.QAbstractItemView.InternalMove:
+        cond1 = event.source != self or event.dropAction() != PyQt5.QtCore.Qt.MoveAction
+        cond2 = self.dragDropMode() != PyQt5.QtWidgets.QAbstractItemView.InternalMove
+        if cond1 and cond2:
+            return
+        topIndex = PyQt5.QtCore.QModelIndex()
+        col = -1
+        row = -1
+        lst = [event, row, col, topIndex]
+        if not self.dropOn(lst):
+            return
+        event, row, col, topIndex = lst
+        idxs = self.selectedIndexes()
+        indexes = []
+        existing_rows = set()
+        for i in idxs:
+            if i.row() not in existing_rows:
+                indexes.append(i)
+                existing_rows.add(i.row())
 
-            topIndex = PyQt5.QtCore.QModelIndex()
-            col = -1
-            row = -1
+        if topIndex in indexes:
+            return
 
-            lst = [event, row, col, topIndex]
+        dropRow = self.model().index(row, col, topIndex)
+        taken = []
 
-            if self.dropOn(lst):
+        indexes_reverse = indexes[:]
+        indexes_reverse.reverse()
+        i = 0
+        for index in indexes_reverse:
+            parent = self.itemFromIndex(index)
+            if not parent or not parent.parent():
+                '''
+                if not parent or not isinstance (parent.parent()
+                                                ,PyQt5.QtWidgets.QTreeWidgetItem
+                                                ):
+                '''
+                taken.append(self.takeTopLevelItem(index.row()))
+            else:
+                taken.append(parent.parent().takeChild(index.row()))
 
-                event, row, col, topIndex = lst
+            i += 1
+            # break
 
-                idxs = self.selectedIndexes()
-                indexes = []
-                existing_rows = set()
-                for i in idxs:
-                    if i.row() not in existing_rows:
-                        indexes.append(i)
-                        existing_rows.add(i.row())
+        taken.reverse()
 
-                if topIndex in indexes:
-                    return
+        for index in indexes:
+            if row == -1:
+                if topIndex.isValid():
+                    parent = self.itemFromIndex(topIndex)
+                    parent.insertChild(parent.childCount(), taken[0])
+                    taken = taken[1:]
 
-                dropRow = self.model().index(row, col, topIndex)
-                taken = []
+                else:
+                    self.insertTopLevelItem (self.topLevelItemCount()
+                                            ,taken[0]
+                                            )
+                    taken = taken[1:]
+            else:
+                r = dropRow.row() if dropRow.row() >= 0 else row
+                if topIndex.isValid():
+                    parent = self.itemFromIndex(topIndex)
+                    parent.insertChild (min(r, parent.childCount())
+                                       ,taken[0]
+                                       )
+                    taken = taken[1:]
+                else:
+                    self.insertTopLevelItem (min(r, self.topLevelItemCount())
+                                            ,taken[0]
+                                            )
+                    taken = taken[1:]
 
-                indexes_reverse = indexes[:]
-                indexes_reverse.reverse()
-                i = 0
-                for index in indexes_reverse:
-                    parent = self.itemFromIndex(index)
-                    if not parent or not parent.parent():
-                        '''
-                        if not parent or not isinstance (parent.parent()
-                                                        ,PyQt5.QtWidgets.QTreeWidgetItem
-                                                        ):
-                        '''
-                        taken.append(self.takeTopLevelItem(index.row()))
-                    else:
-                        taken.append(parent.parent().takeChild(index.row()))
-
-                    i += 1
-                    # break
-
-                taken.reverse()
-
-                for index in indexes:
-                    if row == -1:
-                        if topIndex.isValid():
-                            parent = self.itemFromIndex(topIndex)
-                            parent.insertChild(parent.childCount(), taken[0])
-                            taken = taken[1:]
-
-                        else:
-                            self.insertTopLevelItem (self.topLevelItemCount()
-                                                    ,taken[0]
-                                                    )
-                            taken = taken[1:]
-                    else:
-                        r = dropRow.row() if dropRow.row() >= 0 else row
-                        if topIndex.isValid():
-                            parent = self.itemFromIndex(topIndex)
-                            parent.insertChild (min(r, parent.childCount())
-                                               ,taken[0]
-                                               )
-                            taken = taken[1:]
-                        else:
-                            self.insertTopLevelItem (min(r, self.topLevelItemCount())
-                                                    ,taken[0]
-                                                    )
-                            taken = taken[1:]
-
-                event.accept()
+        event.accept()
 
         PyQt5.QtWidgets.QTreeWidget.dropEvent(self, event)
         self.expandAll()
