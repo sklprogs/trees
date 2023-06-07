@@ -79,47 +79,47 @@ class MyTreeWidget(PyQt5.QtWidgets.QTreeWidget, MyTreeView):
     def dragMoveEvent(self, event):
         pos = event.pos()
         item = self.itemAt(pos)
+        if not item:
+            return
+        # This always gets default column 0 index
+        index = self.indexFromItem(item)
 
-        if item:
-            # This always gets default column 0 index
-            index = self.indexFromItem(item)
+        rect = self.visualRect(index)
+        rect_left = self.visualRect(index.sibling(index.row(), 0))
+        # In case the section has been moved
+        rect_right = self.visualRect (index.sibling(index.row()
+                                     ,self.header().logicalIndex(self.columnCount() - 1))
+                                     )
 
-            rect = self.visualRect(index)
-            rect_left = self.visualRect(index.sibling(index.row(), 0))
-            # In case the section has been moved
-            rect_right = self.visualRect (index.sibling(index.row()
-                                         ,self.header().logicalIndex(self.columnCount() - 1))
-                                         )
+        self.dropIndicatorPosition = self.position(event.pos(), rect, index)
 
-            self.dropIndicatorPosition = self.position(event.pos(), rect, index)
+        if self.dropIndicatorPosition == self.AboveItem:
+            self.dropIndicatorRect = PyQt5.QtCore.QRect (rect_left.left()
+                                                  ,rect_left.top()
+                                                  ,rect_right.right() - rect_left.left()
+                                                  ,0
+                                                  )
+            event.accept()
+        elif self.dropIndicatorPosition == self.BelowItem:
+            self.dropIndicatorRect = PyQt5.QtCore.QRect (rect_left.left()
+                                                        ,rect_left.bottom()
+                                                        ,rect_right.right() - rect_left.left()
+                                                        ,0
+                                                        )
+            event.accept()
+        elif self.dropIndicatorPosition == self.OnItem:
+            self.dropIndicatorRect = PyQt5.QtCore.QRect (rect_left.left()
+                                                        ,rect_left.top()
+                                                        ,rect_right.right() - rect_left.left()
+                                                        ,rect.height()
+                                                        )
+            event.accept()
+        else:
+            self.dropIndicatorRect = PyQt5.QtCore.QRect()
 
-            if self.dropIndicatorPosition == self.AboveItem:
-                self.dropIndicatorRect = PyQt5.QtCore.QRect (rect_left.left()
-                                                      ,rect_left.top()
-                                                      ,rect_right.right() - rect_left.left()
-                                                      ,0
-                                                      )
-                event.accept()
-            elif self.dropIndicatorPosition == self.BelowItem:
-                self.dropIndicatorRect = PyQt5.QtCore.QRect (rect_left.left()
-                                                            ,rect_left.bottom()
-                                                            ,rect_right.right() - rect_left.left()
-                                                            ,0
-                                                            )
-                event.accept()
-            elif self.dropIndicatorPosition == self.OnItem:
-                self.dropIndicatorRect = PyQt5.QtCore.QRect (rect_left.left()
-                                                            ,rect_left.top()
-                                                            ,rect_right.right() - rect_left.left()
-                                                            ,rect.height()
-                                                            )
-                event.accept()
-            else:
-                self.dropIndicatorRect = PyQt5.QtCore.QRect()
-
-            self.model().setData (index, self.dropIndicatorPosition
-                                 ,PyQt5.QtCore.Qt.UserRole
-                                 )
+        self.model().setData (index, self.dropIndicatorPosition
+                             ,PyQt5.QtCore.Qt.UserRole
+                             )
 
         # This is necessary or else the previously drawn rect won't be erased
         self.viewport().update()
