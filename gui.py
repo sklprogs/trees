@@ -43,36 +43,9 @@ class Tree(PyQt5.QtWidgets.QWidget):
     def has_children(self, index_):
         return self.model.model.hasChildren(index_)
     
-    def remove_group(self, major_rowno):
-        # No need to remove children separately, just remove the major
-        self.model.model.removeRow(major_rowno)
-    
-    def remove_major(self, root_rowno):
-        self.model.model.takeItem(root_rowno)
-    
-    def remove_children(self, root_rowno):
-        while self.model.model.item(root_rowno).rowCount():
-            self.model.model.item(root_rowno).takeRow(0)
-    
-    def add_child(self, parent, text):
-        child = PyQt5.QtGui.QStandardItem(text)
-        parent.appendRow(child)
-        return child
-    
-    def insert_child(self, parent, rowno, text):
-        child = PyQt5.QtGui.QStandardItem(text)
-        parent.insertRow(rowno, child)
-        return child
-    
     def remove_item(self, index_):
         # Remove item and all its children
         self.model.model.removeRow(self.get_row(index_),index_.parent())
-    
-    def get_index_above(self, index_):
-        return self.tree.indexAbove(index_)
-    
-    def get_index_below(self, index_):
-        return self.tree.indexBelow(index_)
     
     def collapse_all(self):
         self.tree.collapseAll()
@@ -92,17 +65,6 @@ class Tree(PyQt5.QtWidgets.QWidget):
     def get_parent(self, item):
         return item.parent()
     
-    def insert_root_row(self, rowno):
-        # For some reason, passing self.get_root() causes bugs
-        self.model.model.insertRow(rowno)
-    
-    def insert_row(self, rowno, parent_index):
-        self.model.model.insertRow(rowno, parent_index)
-    
-    def insert(self, item, rowno1, rowno2):
-        item_list = item.takeRow(rowno1)
-        item.insertRow(rowno2, item_list)
-    
     def fill(self, dic):
         self.model.fill(dic)
     
@@ -116,20 +78,11 @@ class Tree(PyQt5.QtWidgets.QWidget):
     def get_text(self,item):
         return item.text()
     
-    def get_row_num(self, item):
-        return item.rowCount()
-    
     def get_child(self, item, rowno, colno):
         return item.child(rowno, colno)
     
     def get_root(self):
         return self.model.model.invisibleRootItem()
-    
-    def get_row(self,index_):
-        return index_.row()
-    
-    def get_cur_row(self):
-        return self.get_cur_index().row()
     
     def set_cur_index(self, index_):
         flags = self.tree.selectionModel().ClearAndSelect
