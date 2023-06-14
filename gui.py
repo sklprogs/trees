@@ -7,26 +7,39 @@ class Model:
     
     def __init__(self):
         self.model = PyQt5.QtGui.QStandardItemModel()
-    
-    def fill(self,dic):
-        self.dic = dic
-        self.parse_json()
-        self.set_headers()
-    
-    def _set_item(self, key):
-        item = PyQt5.QtGui.QStandardItem(str(key))
-        self.root.appendRow(item)
-        for value in self.dic[key]:
-            child = PyQt5.QtGui.QStandardItem(str(value))
-            item.appendRow(child)
-    
-    def parse_json(self):
         self.root = self.model.invisibleRootItem()
-        for key in self.dic:
-            self._set_item(key)
+        self.parent = self.root
     
-    def set_headers(self):
-        self.model.setHorizontalHeaderLabels(['Level'])
+    def fill(self, dic):
+        self.parse_dic(dic)
+    
+    def parse_dic(self, value):
+        for key in value:
+            print('parse_dic:', key)
+            self.parse_item(value[key])
+    
+    def parse_item(self, value):
+        if isinstance(value, str):
+            print('parse_item:', value)
+            #self.addCmd(self.root, value)
+            item = PyQt5.QtGui.QStandardItem(value)
+            self.model.appendRow(item)
+        elif isinstance(value, list):
+            print('parse_item: list')
+            for item in value:
+                self.parse_item(item)
+        elif isinstance(value, dict):
+            print('parse_item: dict')
+            self.parse_dic(value)
+    
+#    def addChildCmd(self, parent, text):
+#        self.addCmd(text, parent)
+#
+#    def addCmd(self, parent, text):
+#        # Add a level to a tree widget
+#        item = PyQt5.QtWidgets.QTreeWidgetItem(parent, [text])
+#        parent.appendRow(item)
+#        return item
 
 
 
@@ -45,7 +58,7 @@ class Tree(PyQt5.QtWidgets.QWidget):
     
     def remove_item(self, index_):
         # Remove item and all its children
-        self.model.model.removeRow(self.get_row(index_),index_.parent())
+        self.model.model.removeRow(self.get_row(index_), index_.parent())
     
     def collapse_all(self):
         self.tree.collapseAll()
