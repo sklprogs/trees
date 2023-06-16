@@ -88,7 +88,7 @@ class Tree(PyQt5.QtWidgets.QWidget):
         self.model = Model()
         self.tree.setModel(self.model.model)
     
-    def get_text(self,item):
+    def get_text(self, item):
         return item.text()
     
     def get_child(self, item, rowno, colno):
