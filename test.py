@@ -55,6 +55,10 @@ class Widget(PyQt5.QtWidgets.QWidget):
         layout_ = PyQt5.QtWidgets.QHBoxLayout()
         layout_.addWidget(self.tree)
         self.setLayout(layout_)
+        
+    def resize_columns(self):
+        # Do this after setting model, see https://stackoverflow.com/questions/8364061/how-do-you-set-the-column-width-on-a-qtreeview
+        self.tree.setColumnWidth(0, 300)
     
     def expand_all(self):
         self.tree.expandAll()
@@ -111,5 +115,7 @@ if __name__ == '__main__':
     main = Widget()
     main.set_model(imodel.model)
     main.expand_all()
+    main.resize_columns()
+    main.resize(600, 650)
     main.show()
     sys.exit(app.exec_())
