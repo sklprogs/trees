@@ -17,7 +17,6 @@ class Model:
             return
         self.dic = dic
         self.parse_json()
-        self.set_headers()
     
     def _set_item(self, parent, section):
         if isinstance(section, dict):
@@ -27,8 +26,7 @@ class Model:
                     parent.appendRow(item)
                     self._set_item(item, value)
                 else:
-                    item2 = PyQt5.QtGui.QStandardItem(str(value))
-                    parent.appendRow([item, item2])
+                    parent.appendRow([item])
     
     def parse_json(self):
         f = 'Model.parse_json'
@@ -37,13 +35,6 @@ class Model:
             return
         parent = self.model.invisibleRootItem()
         self._set_item(parent, self.dic)
-    
-    def set_headers(self):
-        f = 'Model.set_headers'
-        if not self.Success:
-            print(f'{f}:Cancel')
-            return
-        self.model.setHorizontalHeaderLabels(['Level', 'Values'])
 
 
 
@@ -55,10 +46,6 @@ class Widget(PyQt5.QtWidgets.QWidget):
         layout_ = PyQt5.QtWidgets.QHBoxLayout()
         layout_.addWidget(self.tree)
         self.setLayout(layout_)
-        
-    def resize_columns(self):
-        # Do this after setting model, see https://stackoverflow.com/questions/8364061/how-do-you-set-the-column-width-on-a-qtreeview
-        self.tree.setColumnWidth(0, 300)
     
     def expand_all(self):
         self.tree.expandAll()
@@ -115,7 +102,6 @@ if __name__ == '__main__':
     main = Widget()
     main.set_model(imodel.model)
     main.expand_all()
-    main.resize_columns()
-    main.resize(600, 650)
+    main.resize(400, 650)
     main.show()
     sys.exit(app.exec_())
