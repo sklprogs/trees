@@ -81,14 +81,14 @@ if __name__ == '__main__':
                              }
                          ,'Level2_SubLevel3':
                              {'Level2_SubLevel3_item1': 0
-                             ,'Level2_SubLevel3_item2': 
-                                 {'Level2_SubLevel31_item1'
-                                 ,'Level2_SubLevel31_item2'
-                                 ,'Level2_SubLevel31_item3'
-                                 ,'Level2_SubLevel31_item4'
-                                 ,'Level2_SubLevel31_item5'
-                                 ,'Level2_SubLevel31_item6'
-                                 ,'Level2_SubLevel31_item7a'
+                             ,'LEVEL2_SUBLEVEL3_ITEM2': 
+                                 {'Level2_SubLevel31_item1': 1
+                                 ,'Level2_SubLevel31_item2': 2
+                                 ,'Level2_SubLevel31_item3': 3
+                                 ,'Level2_SubLevel31_item4': 4
+                                 ,'Level2_SubLevel31_item5': 5
+                                 ,'Level2_SubLevel31_item6': 6
+                                 ,'Level2_SubLevel31_item7a': 7
                                  }
                              ,'Level2_SubLevel3_item3': 2
                              }
