@@ -1,6 +1,6 @@
 import sys
 import PyQt5
-import PyQt5.QtWidgets
+import PyQt5.QtWidgets, PyQt5.QtCore
 
 
 class Model:
@@ -8,6 +8,18 @@ class Model:
     def __init__(self):
         self.model = PyQt5.QtGui.QStandardItemModel()
         self.Success = True
+    
+    def print(self):
+        rownum = self.model.rowCount()
+        colnum = self.model.columnCount()
+        mes = f'Table size: {rownum}x{colnum}'
+        print(mes)
+        for rowno in range(rownum):
+            for colno in range(colnum):
+                index_ = self.model.index(rowno, colno)
+                data = self.model.data(index_, PyQt5.QtCore.Qt.DisplayRole)
+                print(type(data))
+                print(data)
     
     def fill(self, dic):
         f = 'Model.fill'
@@ -50,7 +62,7 @@ class Widget(PyQt5.QtWidgets.QWidget):
     def expand_all(self):
         self.tree.expandAll()
 
-    def set_model(self,model):
+    def set_model(self, model):
         self.tree.setModel(model)
 
 
@@ -104,4 +116,5 @@ if __name__ == '__main__':
     main.expand_all()
     main.resize(400, 650)
     main.show()
+    imodel.print()
     sys.exit(app.exec_())
