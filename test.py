@@ -1,4 +1,5 @@
 import sys
+import json
 import PyQt5
 import PyQt5.QtWidgets, PyQt5.QtCore
 
@@ -12,12 +13,15 @@ class Widget(PyQt5.QtWidgets.QWidget):
         layout_.addWidget(self.tree)
         self.setLayout(layout_)
     
-    def print(self):
-        iterator = PyQt5.QtWidgets.QTreeWidgetItemIterator(self.tree)
-        while iterator.value():
-            item = iterator.value()
-            print(item.text(0))
-            iterator += 1
+    def _dump(self, parent):
+        dic = {}
+        for row in range(parent.childCount()):
+            child = parent.child(row)
+            dic[child.text(0)] = self._dump(child)
+        return dic
+    
+    def dump(self):
+        return self._dump(self.tree.invisibleRootItem())
     
     def _set_item(self, parent, section):
         if not isinstance(section, dict):
@@ -85,5 +89,5 @@ if __name__ == '__main__':
     main.expand_all()
     main.resize(400, 650)
     main.show()
-    main.print()
+    print(json.dumps(main.dump(), indent=4))
     sys.exit(app.exec_())
