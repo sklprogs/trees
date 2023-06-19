@@ -12,6 +12,13 @@ class Widget(PyQt5.QtWidgets.QWidget):
         layout_.addWidget(self.tree)
         self.setLayout(layout_)
     
+    def print(self):
+        iterator = PyQt5.QtWidgets.QTreeWidgetItemIterator(self.tree)
+        while iterator.value():
+            item = iterator.value()
+            print(item.text(0))
+            iterator += 1
+    
     def _set_item(self, parent, section):
         if not isinstance(section, dict):
             print('_set_item', f'Unexpected type: {type(section)}')
@@ -80,4 +87,5 @@ if __name__ == '__main__':
     main.expand_all()
     main.resize(400, 650)
     main.show()
+    main.print()
     sys.exit(app.exec_())
