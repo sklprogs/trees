@@ -40,46 +40,44 @@ class Widget(PyQt5.QtWidgets.QWidget):
 
 
 if __name__ == '__main__':
-    dic = {'RootLevel':
-              {'Level1': {'Level1_item1': {}
-                         ,'Level1_item2': {}
-                         ,'Level1_item3': {}
+    dic = {'Level1': {'Level1_item1': {}
+                     ,'Level1_item2': {}
+                     ,'Level1_item3': {}
+                     }
+          ,'Level2': {'Level2_SubLevel1':
+                         {'Level2_SubLevel1_item1': {}
+                         ,'Level2_SubLevel1_item2': {}
+                         ,'Level2_SubLevel1_item3': {}
                          }
-              ,'Level2': {'Level2_SubLevel1':
-                             {'Level2_SubLevel1_item1': {}
-                             ,'Level2_SubLevel1_item2': {}
-                             ,'Level2_SubLevel1_item3': {}
-                             }
-                         ,'Level2_SubLevel2':
-                             {'Level2_SubLevel2_item1': {}
-                             ,'Level2_SubLevel2_item2': {}
-                             ,'Level2_SubLevel2_item3': {}
-                             }
-                         ,'Level2_SubLevel3':
-                             {'Level2_SubLevel3_item1': {}
-                             ,'LEVEL2_SUBLEVEL3_ITEM2': 
-                                 {'Level2_SubLevel31_item1': {}
-                                 ,'Level2_SubLevel31_item2': {}
-                                 ,'Level2_SubLevel31_item3': {}
-                                 ,'Level2_SubLevel31_item4': {}
-                                 ,'Level2_SubLevel31_item5': {}
-                                 ,'Level2_SubLevel31_item6': {}
-                                 ,'Level2_SubLevel31_item7a': {}
-                                 }
-                             ,'Level2_SubLevel3_item3': {}
-                             }
-                         ,'Level2_SubLevel4':
-                             {'Level2_SubLevel4_item1': {}
-                             ,'Level2_SubLevel4_item2': {}
-                             ,'Level2_SubLevel4_item3': {}
-                             ,'Level2_SubLevel4_item4': {}
-                             }
+                     ,'Level2_SubLevel2':
+                         {'Level2_SubLevel2_item1': {}
+                         ,'Level2_SubLevel2_item2': {}
+                         ,'Level2_SubLevel2_item3': {}
                          }
-              ,'Level3': {'Level3_item1': {}
-                         ,'Level3_item2': {}
-                         ,'Level3_item3': {}
+                     ,'Level2_SubLevel3':
+                         {'Level2_SubLevel3_item1': {}
+                         ,'LEVEL2_SUBLEVEL3_ITEM2': 
+                             {'Level2_SubLevel31_item1': {}
+                             ,'Level2_SubLevel31_item2': {}
+                             ,'Level2_SubLevel31_item3': {}
+                             ,'Level2_SubLevel31_item4': {}
+                             ,'Level2_SubLevel31_item5': {}
+                             ,'Level2_SubLevel31_item6': {}
+                             ,'Level2_SubLevel31_item7a': {}
+                             }
+                         ,'Level2_SubLevel3_item3': {}
                          }
-              }
+                     ,'Level2_SubLevel4':
+                         {'Level2_SubLevel4_item1': {}
+                         ,'Level2_SubLevel4_item2': {}
+                         ,'Level2_SubLevel4_item3': {}
+                         ,'Level2_SubLevel4_item4': {}
+                         }
+                     }
+          ,'Level3': {'Level3_item1': {}
+                     ,'Level3_item2': {}
+                     ,'Level3_item3': {}
+                     }
           }
     app = PyQt5.QtWidgets.QApplication(sys.argv)
     main = Widget()
